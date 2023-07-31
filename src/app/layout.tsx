@@ -14,7 +14,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <head />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <body className="bg-background">{children}</body>
+        <body className="bg-background font-sans">{children}</body>
       </html>
     </>
   );
