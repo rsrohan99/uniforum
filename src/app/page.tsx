@@ -1,4 +1,4 @@
 const Homepage = () => {
-  return <div>Hello</div>;
+  return <div className="text-accent">Hello world</div>;
 };
 export default Homepage;

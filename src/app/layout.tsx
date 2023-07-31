@@ -1,7 +1,10 @@
 // @TODO CHANGE THE METADATA
+
+import "~/styles/globals.css";
+
 export const metadata = {
-  title: "t3-app-dir-supabase",
-  description: "Boilerplate for t3-app-dir-supabase.",
+  title: "UniForum",
+  description: "UniForum",
 };
 
 function RootLayout({ children }: { children: React.ReactNode }) {
@@ -11,7 +14,7 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <head />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <body>{children}</body>
+        <body className="bg-background">{children}</body>
       </html>
     </>
   );

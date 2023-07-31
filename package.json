@@ -9,9 +9,7 @@
     "lint": "next lint",
     "start": "next start",
     "update-types-local": "supabase gen types typescript --local > src/server/supabase/supabaseTypes.ts",
-    "prepare:local": "yarn update-types-local && yarn prisma db pull && yarn prisma generate && yarn prisma-case-format --file prisma/schema.prisma  && yarn prisma generate",
-    "update-types-remote": "supabase gen types typescript --linked --schema public > src/server/supabaseTypes.ts",
-    "prepare:remote": "yarn update-types-remote && yarn prisma db pull && yarn prisma generate && yarn prisma-case-format --file prisma/schema.prisma  && yarn prisma generate"
+    "update-types-remote": "supabase gen types typescript --linked --schema public > src/server/supabaseTypes.ts"
   },
   "dependencies": {
     "@prisma/client": "^4.11.0",
@@ -22,10 +20,15 @@
     "@trpc/next": "^10.18.0",
     "@trpc/react-query": "^10.18.0",
     "@trpc/server": "^10.18.0",
+    "class-variance-authority": "^0.7.0",
+    "clsx": "^2.0.0",
+    "lucide-react": "^0.263.1",
     "next": "^13.4.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "superjson": "1.12.2",
+    "tailwind-merge": "^1.14.0",
+    "tailwindcss-animate": "^1.0.6",
     "zod": "^3.21.4"
   },
   "devDependencies": {
