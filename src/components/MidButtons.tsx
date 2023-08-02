@@ -1,13 +1,13 @@
 import React from "react";
 import {Button} from "~/components/ui/button";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "~/components/ui/dropdown-menu";
-import {ChevronDown} from "lucide-react";
+import {ChevronDown, PenLine} from "lucide-react";
 
 const MidButtons = () => {
   return (
     <>
-      <div className="flex items-center justify-between pt-24 mx-auto w-7/12">
-        <div className="flex gap-4 items-center">
+      <div className="mx-auto flex flex-wrap lg:flex-nowrap gap-4 w-10/12 lg:w-7/12 items-center justify-between pt-20 md:pt-24">
+        <div className="flex flex-wrap lg:flex-nowrap items-center gap-4">
           <Button
             className="
               px-7
@@ -52,7 +52,7 @@ const MidButtons = () => {
                   ml-2 mt-1
               "><ChevronDown size={18}/></span></Button>
             </DropdownMenuTrigger>
-            <DropdownMenuContent className="w-20 rounded-xl font-semibold text-muted-foreground" align="start" forceMount>
+            <DropdownMenuContent className="w-20 rounded-xl font-medium text-muted-foreground" align="start" forceMount>
                 <DropdownMenuItem>
                   Today
                 </DropdownMenuItem>
@@ -72,8 +72,10 @@ const MidButtons = () => {
           </DropdownMenu>
         </div>
         <div>
-          <Button
-            className="
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                className="
               px-7
               h-8
               rounded-xl
@@ -82,8 +84,31 @@ const MidButtons = () => {
               hover:text-white
               tracking-wider
               font-bold
+              focus-visible:ring-0 focus-visible:ring-offset-0
               text-gray-500"
-          >Create Post</Button>
+              ><span
+                className="
+                  mr-2 mt-1
+              "><PenLine size={18}/></span>Create Post<span
+                className="
+                  ml-2 mt-1
+              "><ChevronDown size={18}/></span></Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent className="w-20 rounded-xl font-medium text-muted-foreground" align="center" forceMount>
+              <DropdownMenuItem>
+                Discussion
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Announcement
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Q&A
+              </DropdownMenuItem>
+              <DropdownMenuItem>
+                Poll
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
       </div>
     </>

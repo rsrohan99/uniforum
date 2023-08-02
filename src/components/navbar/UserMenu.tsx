@@ -20,7 +20,7 @@ import {BellRing} from "lucide-react";
 const UserMenu = () => {
   return (
     <div className="flex items-center justify-between gap-2 sm:gap-5">
-      <BellRing size={18} className="text-muted-foreground cursor-pointer"/>
+      <BellRing size={18} className="cursor-pointer text-muted-foreground"/>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="
@@ -54,7 +54,6 @@ const UserMenu = () => {
             <DropdownMenuItem>
               Settings
             </DropdownMenuItem>
-            <DropdownMenuItem>New Team</DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
           <DropdownMenuItem>

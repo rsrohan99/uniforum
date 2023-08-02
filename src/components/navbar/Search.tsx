@@ -1,15 +1,14 @@
 import React from "react";
 import {Input} from "~/components/ui/input";
 import {Search as SearchIcon} from "lucide-react"
-// import {Label} from "~/components/ui/label";
 
 const Search = () => {
   return (
-    <div className="grid w-full max-w-xl items-center">
-      <div className="flex items-center pl-3 mx-5 bg-background rounded-3xl">
+    <div className="grid w-full max-w-2xl items-center">
+      <div className="mx-5 flex items-center rounded-3xl pl-3 bg-background">
         <SearchIcon size={18} className="text-muted-foreground"/>
         <Input
-          className="h-7 py-1 mx-6 text-muted-foreground placeholder:text-center focus-visible:ring-0 focus-visible:ring-offset-0"
+          className="mx-6 h-7 placeholder:text-center text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
           id="search" placeholder="Search" />
       </div>
     </div>
