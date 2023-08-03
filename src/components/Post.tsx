@@ -1,85 +1,73 @@
 'use client'
 
 import React from "react";
+import {ChevronDown, ChevronUp, Flag, MessageCircle, Save, Share2} from 'lucide-react';
+import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
+
+function timeAgo(timestamp: string): string {
+  const currentDate = new Date();
+  const targetDate = new Date(timestamp);
+
+  const elapsedMilliseconds = currentDate.getTime() - targetDate.getTime();
+  const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
+
+  if (elapsedSeconds < 60) {
+    return `${elapsedSeconds} second${elapsedSeconds === 1 ? '' : 's'} ago`;
+  }
+
+  const elapsedMinutes = Math.floor(elapsedSeconds / 60);
+
+  if (elapsedMinutes < 60) {
+    return `${elapsedMinutes} minute${elapsedMinutes === 1 ? '' : 's'} ago`;
+  }
+
+  const elapsedHours = Math.floor(elapsedMinutes / 60);
+
+  if (elapsedHours < 24) {
+    return `${elapsedHours} hour${elapsedHours === 1 ? '' : 's'} ago`;
+  }
+
+  const elapsedDays = Math.floor(elapsedHours / 24);
+
+  if (elapsedDays < 30) {
+    return `${elapsedDays} day${elapsedDays === 1 ? '' : 's'} ago`;
+  }
+
+  const elapsedMonths = Math.floor(elapsedDays / 30);
+
+  if (elapsedMonths < 12) {
+    return `${elapsedMonths} month${elapsedMonths === 1 ? '' : 's'} ago`;
+  }
+
+  const elapsedYears = Math.floor(elapsedMonths / 12);
+  return `${elapsedYears} year${elapsedYears === 1 ? '' : 's'} ago`;
+}
+
+export interface PostProps {
+  // post: {
+  id: string,
+  user: {
+    username: string;
+    profile_pic: string;
+  };
+  title: string;
+  date_posted: string;
+  hierarchy: string;
+  content: string;
+  // tags: string[];
+  upvotes: number;
+  replies: number;
+  post_type: string;
+  // }
+}
 
 const Post = () => {
   console.log("hello")
-  const post = [
-    {
-      user: {
-        name: "John Doe",
-        image: "https://picsum.photos/200/300"
-      },
-      title: "Conference On Computer Vision Will Be Held Tomorrow",
-      timestamp: "2021-09-01T00:00:00.000Z",
-      hierarchy: "BUET/CSE",
-      body: "A conference on computer vision will held tomorrow at 9 am on 4th August,2023,arranged by Buet,Cse.All students are expected to participate in this program.",
-      tags: ["tag1", "tag2", "tag3"],
-      upvotes: 220,
-      replies: 118
-    },
-    {
-      user: {
-        name: "oliver",
-        image: "https://picsum.photos/200/301"
-      },
-      title: "CSE 305 ct will be held on 6th August,2023",
-      timestamp: "2021-09-02T00:00:00.000Z",
-      hierarchy: "BUET/CSE/CSE305",
-      body: "CSE 305 class date has been announced. The syllebus is from chapter 1 to chapter 3.",
-      tags: ["tag4", "tag5", "tag6"],
-      upvotes: 15,
-      replies: 10
-    }
-  ];
-
   return (
-    <div className="mt-8 flex h-screen flex-row items-start justify-between bg-red-500">
-    <div className="m-5">
-      {/* Loop through each post */}
-      {post.map((post, index) => (
-        <div key={index}>
-          <div className="flex items-center justify-between">
-            <div>
-              <img src={post.user.image} alt="user image" className="w-12 h-12 rounded-full" />
-            </div>
-            <div>
-              <p>5 hours ago</p>
-            </div>
-            <div>
-              <p>{post.hierarchy}</p>
-            </div>
-            <div>
-              <p>Announcement</p>
-            </div>
-          </div>
-          <div>
-            <h5 className="">{post.title}</h5>
-          </div>
-          <div>
-            <p>{post.body}</p>
-          </div>
-          <div className="flex justify-between">
-            <div>
-              <p>upvotes: {post.upvotes}</p>
-            </div>
-            <div>
-              <p>replies: {post.replies}</p>
-            </div>
-            <div>
-              <p>share</p>
-            </div>
-            <div>
-              <p>save</p>
-            </div>
-            <div>
-              <p>report</p>
-            </div>
-          </div>
-        </div>
-      ))}
+    <div
+      className="mt-8 flex h-screen flex-row items-start justify-between bg-red-500">
+      Post
     </div>
-  </div>
   );
 }
 

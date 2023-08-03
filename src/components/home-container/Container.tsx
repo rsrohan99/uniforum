@@ -6,7 +6,7 @@ import CoursesTree from "~/components/home-container/CoursesTree";
 const Container = () => {
   return (
     <div
-      className="mt-4 md:mt-8 flex px-2 sm:px-7 h-full w-full flex-row items-start justify-between">
+      className="mt-4 md:mt-8 flex px-2 sm:px-7 h-full w-full flex-row items-start justify-between overflow-hidden">
       <FilterBox/>
       <PostsContainer/>
       <CoursesTree/>
