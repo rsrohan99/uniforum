@@ -1,4 +1,7 @@
+'use client'
+
 import React from "react";
+import { useRouter } from "next/navigation";
 import {
   Avatar,
   AvatarFallback,
@@ -14,13 +17,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
+import NotificationBell from "~/components/navbar/NotificationBell";
 
-import {BellRing} from "lucide-react";
 
 const UserMenu = () => {
+  const router = useRouter();
   return (
     <div className="flex items-center justify-between gap-2 sm:gap-5">
-      <BellRing size={18} className="cursor-pointer text-muted-foreground"/>
+      <NotificationBell/>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Button variant="ghost" className="
@@ -45,7 +49,7 @@ const UserMenu = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => router.push('/profile')}>
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem>
