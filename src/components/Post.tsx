@@ -26,7 +26,7 @@ const Post = () => {
     timestamp: 1690293118,
     hierarchy: "BUET/CSE",
     body: "A conference on computer vision will be held on tomorrow at 10:00 AM, 21st January, 2023, arranged by CSE, BUET. All the students are requested to join the conference.",
-    tags: ["tag1", "tag2", "tag3"],
+    tags: ["python", "js", "c++"],
     upvotes: 220,
     replies: 5
   }
@@ -49,8 +49,17 @@ const Post = () => {
           <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-sm">Announcement</p>
         </div>
       </div>
-      <div className="mt-5">
+      <div className="mt-5 flex">
         <h5 className="text-gray-700 font-bold text-2xl">{post.title}</h5>
+        <div className="flex ml-5">
+          {post.tags.map((tag, index) => (
+            <div
+              key={index}
+              className="bg-accent2 rounded-2xl px-4 py-1 text-white font-bold text-sm ml-2">
+              {tag}
+            </div>
+          ))}
+        </div>
       </div>
       <div className="mt-5">
         <p className="text-gray-500 font-medium">{post.body}</p>
