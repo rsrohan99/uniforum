@@ -61,72 +61,15 @@ export interface PostProps {
   // }
 }
 
-const Post: React.FC<PostProps> = ({
-  ...post
-}) => {
+const Post = () => {
+  console.log("hello")
   return (
     <div
-      className="bg-white p-5 rounded-xl">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={post.user.profile_pic}/>
-            <AvatarFallback className="bg-background">{post.user.username.charAt(0).toUpperCase()}</AvatarFallback>
-          </Avatar>
-          {/*<img src={post.user.image} alt="user image" className="w-8 h-8 rounded-full" />*/}
-          <p className="pl-3 text-gray-500 text-xs font-semibold">@{post.user.username}</p>
-        </div>
-        <div className="flex items-center">
-          <span className="font-bold text-3xl pr-2 pb-[17px] text-accent2">.</span>
-          <p className="text-gray-500 font-semibold text-xs">{timeAgo(post.date_posted)}</p>
-        </div>
-        <div>
-          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-xs">{post.hierarchy.toUpperCase()}</p>
-        </div>
-        <div>
-          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-xs tracking-wide">{post.post_type}</p>
-        </div>
-      </div>
-      <div className="mt-1 flex">
-        <h5 className="text-gray-600 font-bold text-xl">{post.title}</h5>
-        {/*<div className="flex ml-5">*/}
-        {/*  {post.tags.map((tag, index) => (*/}
-        {/*    <div*/}
-        {/*      key={index}*/}
-        {/*      className="bg-accent2 rounded-2xl h-6 px-4 py-1 text-white tracking-wide font-semibold text-xs ml-1 align-middle">*/}
-        {/*      #&nbsp;{tag}*/}
-        {/*    </div>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
-      </div>
-      <div className="mt-3">
-        <p className="text-gray-500 font-medium text-sm">{post.content}</p>
-      </div>
-      <div className="flex items-center justify-between mt-7 font-semibold text-xs text-slate-500">
-        <div className="flex items-center bg-background rounded-3xl px-6 py-2">
-          <ChevronUp size={18} className="text-accent2" />
-          <p className="ml-4 text-accent2">{post.upvotes}</p>
-          <ChevronDown size={18} className="ml-4 text-slate-500" />
-        </div>
-        <div className="flex items-center">
-          <MessageCircle size={18} />
-          <p className="ml-2">{post.replies} replies</p>
-        </div>
-        <div className="flex items-center">
-          <Share2 size={18} />
-          <p className="ml-2">Share</p>
-        </div>
-        <div className="flex items-center">
-          <Save size={18} />
-          <p className="ml-2">Save</p>
-        </div>
-        <div className="flex items-center">
-          <Flag size={18} />
-          <p className="ml-2">Report</p>
-        </div>
-      </div>
+      className="mt-8 flex h-screen flex-row items-start justify-between bg-red-500">
+      Post
     </div>
   );
 }
+
 
 export default Post;
