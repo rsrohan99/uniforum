@@ -16,75 +16,81 @@ function daysAgo(timestamp) {
   return Math.floor(daysDifference); // Convert to an integer to get whole days
 }
 
-const Post = () => {
-  const post = {
+interface PostProps {
+  post: {
+    id: string,
     user: {
-      name: "JohnDoe",
-      image: "https://picsum.photos/200/300"
-    },
-    title: "Conference on Computer Vision will be held on tomorrow",
-    timestamp: 1690293118,
-    hierarchy: "BUET/CSE",
-    body: "A conference on computer vision will be held on tomorrow at 10:00 AM, 21st January, 2023, arranged by CSE, BUET. All the students are requested to join the conference.",
-    tags: ["python", "js", "c++"],
-    upvotes: 220,
-    replies: 5
+      name: string;
+      image: string;
+    };
+    title: string;
+    timestamp: number;
+    hierarchy: string;
+    body: string;
+    tags: string[];
+    upvotes: number;
+    replies: number;
   }
+}
+
+const Post: React.FC<PostProps> = ({
+  post
+}) => {
   return (
     <div
-      className="m-5">
+      className="bg-white p-5 rounded-xl">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
-          <img src={post.user.image} alt="user image" className="w-12 h-12 rounded-full" />
-          <p className="pl-3 text-gray-500 font-bold">@{post.user.name}</p>
+          <img src={post.user.image} alt="user image" className="w-8 h-8 rounded-full" />
+          <p className="pl-3 text-gray-500 text-xs font-semibold">@{post.user.name}</p>
         </div>
         <div className="flex items-center">
-          <span className="font-bold text-3xl pr-2 pb-3 text-accent2">.</span>
-          <p className="text-gray-500 font-bold">{daysAgo(post.timestamp)} day/s ago</p>
+          <span className="font-bold text-3xl pr-2 pb-[17px] text-accent2">.</span>
+          <p className="text-gray-500 font-semibold text-xs">{daysAgo(post.timestamp)} day{(daysAgo(post.timestamp) > 1) ? 's':''} ago</p>
         </div>
         <div>
-          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-sm">{post.hierarchy}</p>
+          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-xs">{post.hierarchy}</p>
         </div>
         <div>
-          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-sm">Announcement</p>
+          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-xs tracking-wide">Announcement</p>
         </div>
       </div>
-      <div className="mt-5 flex">
-        <h5 className="text-gray-700 font-bold text-2xl">{post.title}</h5>
+      <div className="mt-4 flex">
+        <h5 className="text-gray-600 font-bold text-xl">{post.title}</h5>
         <div className="flex ml-5">
           {post.tags.map((tag, index) => (
             <div
               key={index}
-              className="bg-accent2 rounded-2xl px-4 py-1 text-white font-bold text-sm ml-2">
-              {tag}
+              className="bg-accent2 rounded-2xl h-6 px-4 py-1 text-white tracking-wide font-semibold text-xs ml-1 align-middle">
+              #&nbsp;{tag}
             </div>
           ))}
         </div>
       </div>
-      <div className="mt-5">
-        <p className="text-gray-500 font-medium">{post.body}</p>
+      <div className="mt-4">
+        <p className="text-gray-500 font-medium text-sm">{post.body}</p>
       </div>
-      <div className="flex justify-between mt-5 font-bold text-slate-500">
-        <div className="flex bg-background rounded-3xl px-6 py-2">
-          <ArrowUp className="text-accent2" />
+      <div className="flex items-center justify-between mt-5 font-semibold text-xs text-slate-500">
+        <div className="flex items-center bg-background rounded-3xl px-6 py-2">
+          <ArrowUp size={18} className="text-accent2" />
           <p className="ml-4 text-accent2">{post.upvotes}</p>
-          <ArrowDown className="ml-4 text-slate-500" />
+          <ArrowDown size={18} className="ml-4 text-slate-500" />
         </div>
-        <div className="flex">
-          <MessageCircle />
+        <div className="flex items-center">
+          <MessageCircle size={18} />
           <p className="ml-2">{post.replies} replies</p>
         </div>
-        <div className="flex">
-          <Share2 />
-          <p className="ml-2">share</p> 
+        <div className="flex items-center">
+          <Share2 size={18} />
+          <p className="ml-2">Share</p>
         </div>
-        <div className="flex">
-          <Save />
-          <p className="ml-2">save</p>
+        <div className="flex items-center">
+          <Save size={18} />
+          <p className="ml-2">Save</p>
         </div>
-        <div className="flex">
-          <Flag />
-          <p className="ml-2">report</p>
+        <div className="flex items-center">
+          <Flag size={18} />
+          <p className="ml-2">Report</p>
         </div>
       </div>
     </div>
