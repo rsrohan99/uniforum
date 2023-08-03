@@ -10,23 +10,23 @@ const Post = () => {
         name: "John Doe",
         image: "https://picsum.photos/200/300"
       },
-      title: "Post 1 Title",
+      title: "Conference On Computer Vision Will Be Held Tomorrow",
       timestamp: "2021-09-01T00:00:00.000Z",
       hierarchy: "BUET/CSE",
-      body: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum. lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+      body: "A conference on computer vision will held tomorrow at 9 am on 4th August,2023,arranged by Buet,Cse.All students are expected to participate in this program.",
       tags: ["tag1", "tag2", "tag3"],
-      upvotes: 10,
-      replies: 5
+      upvotes: 220,
+      replies: 118
     },
     {
       user: {
         name: "oliver",
         image: "https://picsum.photos/200/301"
       },
-      title: "Post 2 Title",
+      title: "CSE 305 ct will be held on 6th August,2023",
       timestamp: "2021-09-02T00:00:00.000Z",
       hierarchy: "BUET/CSE/CSE305",
-      body: "lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum. lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam, voluptatum.",
+      body: "CSE 305 class date has been announced. The syllebus is from chapter 1 to chapter 3.",
       tags: ["tag4", "tag5", "tag6"],
       upvotes: 15,
       replies: 10
