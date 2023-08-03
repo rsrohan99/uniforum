@@ -3,6 +3,7 @@
 import "~/styles/globals.css";
 
 import { Inter } from "next/font/google";
+import {Navbar} from "~/components/navbar/Navbar";
 
 const font = Inter({
   subsets: ['latin']
@@ -20,7 +21,10 @@ function RootLayout({ children }: { children: React.ReactNode }) {
         <head />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta name="theme-color" content="#000000" />
-        <body className={`${font.className} bg-background`}>{children}</body>
+        <body className={`${font.className} bg-background`}>
+        <Navbar/>
+        {children}
+        </body>
       </html>
     </>
   );
