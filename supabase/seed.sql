@@ -1,6 +1,8 @@
 delete from courses;
 delete from departments;
 delete from university;
+delete from posts;
+delete from post_types;
 -- Insert the university (buet)
 INSERT INTO university (id, name) VALUES ('buet', 'Bangladesh University of Engineering and Technology');
 
@@ -18,43 +20,43 @@ INSERT INTO courses (id, name, department) VALUES
   ('me201', 'Thermodynamics', 'me');
 
 insert into post_types (name) values
-  ('discussion'),
-  ('announcement'),
-  ('q&a'),
-  ('poll');
+  ('Discussion'),
+  ('Announcement'),
+  ('Q&A'),
+  ('Poll');
 
 
 -- Seed posts
 -- Seed posts for user with id "cf7fe057-be01-402b-9076-55b5e230934e"
 -- Post 1
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('First Post', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse', 'This is my first post in the Computer Science department.', 'discussion');
+VALUES ('First Post', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse', 'This is my first post in the Computer Science department.', 'Discussion');
 
 -- Post 2
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Course Update', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse/cse301', 'There will be a change in the course schedule for CSE301.', 'announcement');
+VALUES ('Course Update', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse/cse301', 'There will be a change in the course schedule for CSE301.', 'Announcement');
 
 -- Post 3
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Internship Opportunity', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/me', 'There is an exciting internship opportunity for Mechanical Engineering students.', 'announcement');
+VALUES ('Internship Opportunity', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/me', 'There is an exciting internship opportunity for Mechanical Engineering students.', 'Announcement');
 
 -- Post 4
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Research Paper Publication', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse', 'Our research paper on machine learning has been accepted for publication.', 'announcement');
+VALUES ('Research Paper Publication', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse', 'Our research paper on machine learning has been accepted for publication.', 'Discussion');
 
 -- Post 5
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Course Registration', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse/cse201', 'The course registration for CSE201 will start next week.', 'announcement');
+VALUES ('Course Registration', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/cse/cse201', 'The course registration for CSE201 will start next week.', 'Announcement');
 
 -- Post 6
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Alumni Meetup', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet', 'Calling all alumni for a meetup on the university campus next month.', 'discussion');
+VALUES ('Alumni Meetup', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet', 'Calling all alumni for a meetup on the university campus next month.', 'Discussion');
 
 -- Post 7
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Important Announcement', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/me', 'All students are requested to attend the departmental meeting tomorrow.', 'announcement');
+VALUES ('Important Announcement', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet/me', 'All students are requested to attend the departmental meeting tomorrow.', 'Announcement');
 
 -- Post 8
 INSERT INTO posts (title, user_id, hierarchy, content, post_type)
-VALUES ('Career Fair', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet', 'Don\''t miss the annual career fair happening next week in the university premises.', 'announcement');
+VALUES ('Career Fair', 'cf7fe057-be01-402b-9076-55b5e230934e', 'buet', 'Don\''t miss the annual career fair happening next week in the university premises.', 'Announcement');
 

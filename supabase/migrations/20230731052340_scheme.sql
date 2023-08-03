@@ -80,7 +80,7 @@ create table posts
   hierarchy text,
   content text,
   date_posted           TIMESTAMPTZ default now(),
-  post_type text REFERENCES post_types (name) on delete cascade
+  post_type text REFERENCES post_types (name) on delete cascade on update cascade
 );
 alter table posts enable row level security;
 create policy "everyone can see posts" on posts
