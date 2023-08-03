@@ -3,6 +3,19 @@
 import React from "react";
 import { ArrowDown, ArrowUp, Flag, MessageCircle, Save, Share2 } from 'lucide-react';
 
+function daysAgo(timestamp) {
+  // Step 1: Get the current timestamp
+  const currentTimestamp = Date.now() / 1000;
+
+  // Step 2: Calculate the time difference in seconds
+  const timeDifference = currentTimestamp - timestamp;
+
+  // Step 3: Convert the time difference into days
+  const daysDifference = timeDifference / (24 * 60 * 60);
+
+  return Math.floor(daysDifference); // Convert to an integer to get whole days
+}
+
 const Post = () => {
   const post = {
     user: {
@@ -10,7 +23,7 @@ const Post = () => {
       image: "https://picsum.photos/200/300"
     },
     title: "Conference on Computer Vision will be held on tomorrow",
-    timestamp: "2021-09-01T00:00:00.000Z",
+    timestamp: 1690293118,
     hierarchy: "BUET/CSE",
     body: "A conference on computer vision will be held on tomorrow at 10:00 AM, 21st January, 2023, arranged by CSE, BUET. All the students are requested to join the conference.",
     tags: ["tag1", "tag2", "tag3"],
@@ -27,7 +40,7 @@ const Post = () => {
         </div>
         <div className="flex items-center">
           <span className="font-bold text-3xl pr-2 pb-3 text-accent2">.</span>
-          <p className="text-gray-500 font-bold">1 hour ago</p>
+          <p className="text-gray-500 font-bold">{daysAgo(post.timestamp)} day/s ago</p>
         </div>
         <div>
           <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-sm">{post.hierarchy}</p>
