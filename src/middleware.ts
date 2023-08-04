@@ -7,13 +7,7 @@ import { createMiddlewareClient } from '@supabase/auth-helpers-nextjs'
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next()
   const supabase = createMiddlewareClient({ req:request, res:response })
-  // await supabase.auth.getSession()
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser()
   const {data: {session}} = await supabase.auth.getSession()
-  // if user is not signed in and the current path is not / redirect the user to /
-  // console.log(session)
 
   if (session && request.nextUrl.pathname === '/') {
     return NextResponse.redirect(new URL('/app', request.url))
@@ -23,7 +17,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.redirect(new URL('/', request.url))
   }
   return response;
-  // return NextResponse.redirect(request.url)
 }
 export const config = {
   matcher: [
@@ -38,8 +31,3 @@ export const config = {
     '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 }
-
-// See "Matching Paths" below to learn more
-// export const config = {
-//   matcher: '/about/:path*',
-// }
