@@ -66,44 +66,44 @@ const Post: React.FC<PostProps> = ({
 }) => {
   return (
     <div
-      className="bg-white p-5 rounded-xl">
+      className="rounded-xl bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Avatar className="h-8 w-8">
             <AvatarImage src={post.user.profile_pic}/>
             <AvatarFallback className="bg-background">{post.user.username.charAt(0).toUpperCase()}</AvatarFallback>
           </Avatar>
-          {/*<img src={post.user.image} alt="user image" className="w-8 h-8 rounded-full" />*/}
-          <p className="pl-3 text-gray-500 text-xs font-semibold">@{post.user.username}</p>
+          {/*<img src={post.user.image} alt="user image" className="h-8 w-8 rounded-full" />*/}
+          <p className="pl-3 text-xs font-semibold text-gray-500">@{post.user.username}</p>
         </div>
         <div className="flex items-center">
-          <span className="font-bold text-3xl pr-2 pb-[17px] text-accent2">.</span>
-          <p className="text-gray-500 font-semibold text-xs">{timeAgo(post.date_posted)}</p>
+          <span className="pr-2 text-3xl font-bold pb-[17px] text-accent2">.</span>
+          <p className="text-xs font-semibold text-gray-500">{timeAgo(post.date_posted)}</p>
         </div>
         <div>
-          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-xs">{post.hierarchy.toUpperCase()}</p>
+          <p className="rounded-2xl px-4 py-2 text-xs font-bold text-gray-500 bg-background">{post.hierarchy.toUpperCase()}</p>
         </div>
         <div>
-          <p className="text-gray-500 font-bold bg-background py-2 px-4 rounded-2xl text-xs tracking-wide">{post.post_type}</p>
+          <p className="rounded-2xl px-4 py-2 text-xs font-bold tracking-wide text-gray-500 bg-background">{post.post_type}</p>
         </div>
       </div>
       <div className="mt-1 flex">
-        <h5 className="text-gray-600 font-bold text-xl">{post.title}</h5>
-        {/*<div className="flex ml-5">*/}
+        <h5 className="text-xl font-bold text-gray-600">{post.title}</h5>
+        {/*<div className="ml-5 flex">*/}
         {/*  {post.tags.map((tag, index) => (*/}
         {/*    <div*/}
         {/*      key={index}*/}
-        {/*      className="bg-accent2 rounded-2xl h-6 px-4 py-1 text-white tracking-wide font-semibold text-xs ml-1 align-middle">*/}
+        {/*      className="ml-1 h-6 rounded-2xl px-4 py-1 align-middle text-xs font-semibold tracking-wide text-white bg-accent2">*/}
         {/*      #&nbsp;{tag}*/}
         {/*    </div>*/}
         {/*  ))}*/}
         {/*</div>*/}
       </div>
       <div className="mt-3">
-        <p className="text-gray-500 font-medium text-sm">{post.content}</p>
+        <p className="text-sm font-medium text-gray-500">{post.content}</p>
       </div>
-      <div className="flex items-center justify-between mt-7 font-semibold text-xs text-slate-500">
-        <div className="flex items-center bg-background rounded-3xl px-6 py-2">
+      <div className="mt-7 flex items-center justify-between text-xs font-semibold text-slate-500">
+        <div className="flex items-center rounded-3xl px-6 py-2 bg-background">
           <ChevronUp size={18} className="text-accent2" />
           <p className="ml-4 text-accent2">{post.upvotes}</p>
           <ChevronDown size={18} className="ml-4 text-slate-500" />

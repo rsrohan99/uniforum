@@ -18,12 +18,23 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
 import NotificationBell from "~/components/navbar/NotificationBell";
+import {useSupabase} from "~/providers/supabase-provider";
 
 
 const UserMenu = () => {
   const router = useRouter();
+  const supabase = useSupabase()
+
+  const handleSignOut = async () => {
+    const {error} = await supabase.auth.signOut();
+    // router.refresh();
+    router.replace('/')
+  }
+
+
   return (
     <div className="flex items-center justify-between gap-2 sm:gap-5">
+
       <NotificationBell/>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
@@ -49,7 +60,7 @@ const UserMenu = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push('/profile')}>
+            <DropdownMenuItem onClick={() => router.push('/app/profile')}>
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem>
@@ -60,7 +71,7 @@ const UserMenu = () => {
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />
-          <DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
             Log out
           </DropdownMenuItem>
         </DropdownMenuContent>

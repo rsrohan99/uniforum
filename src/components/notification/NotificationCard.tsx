@@ -12,12 +12,12 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
 }) => {
   return (
     <div
-      className="flex gap-4 w-full h-20 pl-4 items-center bg-white rounded-xl">
+      className="flex h-20 w-full items-center gap-4 rounded-xl bg-white pl-4">
       <Avatar className="h-8 w-8">
         <AvatarImage src="/avatars/01.png"/>
         <AvatarFallback className="bg-background">S</AvatarFallback>
       </Avatar>
-      <div className="font-semibold text-sm tracking-wide">{content}</div>
+      <div className="text-sm font-semibold tracking-wide text-gray-600">{content}</div>
     </div>
   );
 }

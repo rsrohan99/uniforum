@@ -8,8 +8,8 @@ import {ChevronDown, PenLine} from "lucide-react";
 const MidButtons = () => {
   return (
     <>
-      <div className="mx-auto flex flex-wrap lg:flex-nowrap gap-4 w-10/12 lg:w-7/12 items-center justify-between pt-20 md:pt-24">
-        <div className="flex flex-wrap lg:flex-nowrap items-center gap-4">
+      <div className="mx-auto flex w-10/12 flex-wrap items-center justify-between gap-4 pt-20 md:pt-24 lg:w-7/12 lg:flex-nowrap">
+        <div className="flex flex-wrap items-center gap-4 lg:flex-nowrap">
           <Button
             className="
               px-7

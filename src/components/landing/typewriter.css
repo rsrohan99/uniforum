@@ -1,0 +1,7 @@
+.Typewriter__wrapper {
+    @apply text-3xl font-bold tracking-wide text-gray-500;
+}
+
+.Typewriter__cursor {
+    @apply text-3xl font-semibold tracking-wide text-[#E3ABCD];
+}

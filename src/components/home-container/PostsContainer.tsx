@@ -2,7 +2,7 @@
 
 import React, {useEffect, useState} from "react";
 
-import Post, {PostProps} from "~/components/Post";
+import Post, {PostProps} from "~/components/posts/Post";
 import {clientSupabase} from "~/server/supabase/supabaseClient";
 import PostsSkeleton from "~/components/posts/PostsSkeleton";
 
@@ -54,7 +54,7 @@ const PostsContainer = () => {
   // ]
   return (
     <div
-      className="w-10/12 lg:w-7/12 flex rounded-xl flex-col gap-4">
+      className="flex w-10/12 flex-col gap-4 rounded-xl lg:w-7/12">
       {loading ? (
         <>
           <PostsSkeleton/>
