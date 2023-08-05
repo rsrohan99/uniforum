@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import { useRouter } from "next/navigation";
 import {
   Avatar,
@@ -18,12 +18,20 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu"
 import NotificationBell from "~/components/navbar/NotificationBell";
-import {useSupabase} from "~/providers/supabase-provider";
+import {useSession, useSupabase} from "~/providers/supabase-provider";
 
 
 const UserMenu = () => {
   const router = useRouter();
   const supabase = useSupabase()
+  const currentSession = useSession()
+  const defaultAvatarUrl = '/images/placeholder.jpg'
+  // const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl)
+
+  // useEffect(() => {
+  //   // console.log(currentSession?.user)
+  //   setAvatarUrl(currentSession?.user.user_metadata.avatar_url || defaultAvatarUrl)
+  // }, [currentSession])
 
   const handleSignOut = async () => {
     const {error} = await supabase.auth.signOut();
@@ -44,8 +52,10 @@ const UserMenu = () => {
             rounded-full
             focus-visible:ring-0 focus-visible:ring-offset-0">
             <Avatar className="h-8 w-8">
-              <AvatarImage src="/avatars/01.png"/>
-              <AvatarFallback className="bg-background">RS</AvatarFallback>
+              <AvatarImage src={currentSession?.user.user_metadata.avatar_url || defaultAvatarUrl} />
+              <AvatarFallback>{currentSession?.user.user_metadata.full_name.split(' ')[0] || "U"}</AvatarFallback>
+              {/*<AvatarImage src="/avatars/01.png"/>*/}
+              {/*<AvatarFallback className="bg-background">RS</AvatarFallback>*/}
             </Avatar>
           </Button>
         </DropdownMenuTrigger>

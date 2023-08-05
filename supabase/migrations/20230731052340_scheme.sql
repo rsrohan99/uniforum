@@ -7,10 +7,12 @@ drop table if exists comments;
 drop table if exists shares;
 drop table if exists udvotes;
 drop table if exists bookmarks;
+drop table if exists post_hierarchy;
+drop table if exists enrollments;
 drop table if exists posts;
-drop table if exists uni_users;
-
+drop table if exists post_types;
 drop table if exists courses;
+drop table if exists uni_users;
 drop table if exists departments;
 drop table if exists university;
 create table university
@@ -52,6 +54,7 @@ CREATE TABLE uni_users
     email text,
     iss text,
     metadata jsonb,
+    is_first_time BOOLEAN default true,
     is_verified BOOLEAN default false
 --     constraint prompt_users_pkey primary key (user_id)
 );
@@ -63,10 +66,26 @@ create policy "users can only insert their data" on uni_users
 create policy "users can update their info" on uni_users
   for update using(auth.uid() = user_id);
 
-delete table if exists post_types;
+create table enrollments
+(
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id uuid REFERENCES uni_users (user_id) on delete cascade,
+  course text REFERENCES courses (id) on delete cascade on update cascade,
+  CONSTRAINT uniq_user_course UNIQUE (user_id, course)
+);
+alter table enrollments enable row level security;
+create policy "user can only see their enrollments" on enrollments
+  for select using(auth.uid() = user_id);
+create policy "users can only insert their enrollments" on enrollments
+  for insert with check (auth.uid() = user_id);
+create policy "users can update their enrollments" on enrollments
+  for update using(auth.uid() = user_id);
+create policy "users can delete their enrollments" on enrollments
+  for delete using(auth.uid() = user_id);
+
 create table post_types
 (
-  name text primary key,
+  name text primary key
 );
 alter table post_types enable row level security;
 create policy "everyone can see post_types" on post_types
@@ -77,7 +96,8 @@ create table posts
   id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
   title text,
   user_id uuid REFERENCES uni_users (user_id) on delete cascade,
-  hierarchy text,
+--   hierarchy text,
+  embedding vector(1536),
   content text,
   date_posted           TIMESTAMPTZ default now(),
   post_type text REFERENCES post_types (name) on delete cascade on update cascade
@@ -86,6 +106,23 @@ alter table posts enable row level security;
 create policy "everyone can see posts" on posts
   for select using (true);
 
+-- drop table if exists post_hierarchy;
+create table post_hierarchy
+(
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  post_id uuid REFERENCES posts (id) on delete cascade,
+  course text REFERENCES courses (id) on delete cascade on update cascade,
+  department text REFERENCES departments (id) on delete cascade on update cascade,
+  university text REFERENCES university (id) on delete cascade on update cascade,
+  CONSTRAINT uniq_post_hierarchy UNIQUE (post_id, course, university)
+);
+alter table post_hierarchy enable row level security;
+create policy "user can only see their post_hierarchy" on post_hierarchy
+  for select using(auth.uid() = (select user_id from posts where posts.id = post_id));
+create policy "users can only insert their post_hierarchy" on post_hierarchy
+  for insert with check (auth.uid() = (select user_id from posts where posts.id = post_id));
+create policy "users can update their post_hierarchy" on post_hierarchy
+  for update using(auth.uid() = (select user_id from posts where posts.id = post_id));
 
 
 -- Prompts table

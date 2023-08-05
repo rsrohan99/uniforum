@@ -8,14 +8,17 @@ INSERT INTO university (id, name) VALUES ('buet', 'Bangladesh University of Engi
 
 -- Insert the departments (cse and me)
 INSERT INTO departments (id, name, university) VALUES
+  ('buet_all_~', 'All BUET departments', 'buet'),
   ('cse', 'Computer Science and Engineering', 'buet'),
   ('me', 'Mechanical Engineering', 'buet');
 
 -- Insert courses in the departments
 INSERT INTO courses (id, name, department) VALUES
+  ('cse_all_~', 'All CSE courses', 'cse'),
   ('cse101', 'Introduction to Programming', 'cse'),
   ('cse201', 'Data Structures and Algorithms', 'cse'),
   ('cse301', 'Database Management Systems', 'cse'),
+  ('me_all_~', 'All ME courses', 'me'),
   ('me101', 'Engineering Mechanics', 'me'),
   ('me201', 'Thermodynamics', 'me');
 

@@ -27,8 +27,9 @@ export default function SupabaseProvider({
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, _session) => {
-      // console.log(event, _session);
       if (_session?.access_token !== session?.access_token) {
+        if (event == 'SIGNED_IN') router.replace('/app')
+        // console.log(event, _session);
         router.refresh()
       }
     })

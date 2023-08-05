@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import {createServerActionClient} from "@supabase/auth-helpers-nextjs";
 import {cookies} from "next/headers";
 import SupabaseProvider from "~/providers/supabase-provider";
+import {Toaster} from "react-hot-toast";
 
 const font = Inter({
   subsets: ['latin']
@@ -29,6 +30,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <SupabaseProvider session={data.session}>
           {children}
         </SupabaseProvider>
+        <Toaster/>
         </body>
       </html>
     </>
