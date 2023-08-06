@@ -7,6 +7,8 @@ import {createServerActionClient} from "@supabase/auth-helpers-nextjs";
 import {cookies} from "next/headers";
 import SupabaseProvider from "~/providers/supabase-provider";
 import {Toaster} from "react-hot-toast";
+export const dynamic = 'force-dynamic'
+
 
 const font = Inter({
   subsets: ['latin'],

@@ -1,9 +1,9 @@
 'use client'
 
-import {Input} from "~/components/ui/input.tsx";
-import React, {useEffect, useState} from "react";
-import {Button} from "~/components/ui/button.tsx";
-import {useSession, useSupabase} from "~/providers/supabase-provider.tsx";
+import {Input} from "~/components/ui/input";
+import React, {useState} from "react";
+import {Button} from "~/components/ui/button";
+import {useSession, useSupabase} from "~/providers/supabase-provider";
 import toast from 'react-hot-toast';
 import {useRouter} from "next/navigation";
 
@@ -56,16 +56,16 @@ const SetUsernamePage = () => {
     }
   }
   return (
-    <div className='flex flex-col gap-2 mt-10'>
-      <div className='text-2xl mb-5 text-center p-4 text-muted-foreground tracking-wide font-semibold'>
+    <div className='mt-10 flex flex-col gap-2'>
+      <div className='mb-5 p-4 text-center text-2xl font-semibold tracking-wide text-muted-foreground'>
         {/*Enter your unique username*/}
         Let's setup your unique username for the first time
       </div>
       <Input onChange={(e) => setUsername(e.target.value)}
-        className="px-10 mx-auto w-3/4 h-8 placeholder:text-center text-sm tracking-wide bg-white rounded-xl text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+        className="mx-auto h-8 w-3/4 rounded-xl bg-white px-10 placeholder:text-center text-sm tracking-wide text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
         id="username" placeholder="Username" />
       <Button onClick={handleSetUsername}
-        className=" px-7 py-3 mx-auto w-3/4 mt-4 h-7 border-accent2 border-2 rounded-xl bg-background hover:bg-accent2 hover:text-white tracking-wider font-bold text-sm text-gray-500"
+        className="mx-auto mt-4 h-7 w-3/4 rounded-xl border-2 px-7 py-3 text-sm font-bold tracking-wider text-gray-500 border-accent2 bg-background hover:bg-accent2 hover:text-white"
       >Set Username</Button>
 
     </div>

@@ -3,7 +3,7 @@
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "~/components/ui/dropdown-menu";
 import {Button} from "~/components/ui/button";
 import {ChevronDown} from "lucide-react";
-import React, {useEffect, useState} from "react";
+import React, {useState} from "react";
 import Compose from "~/components/posts/Compose";
 
 interface Department {
@@ -15,7 +15,7 @@ interface Hierarchy {
   departments: Department[]
 }
 
-function ComposePage(props) {
+function ComposePage() {
   const hierarchy_object: Hierarchy = {
     uni: 'BUET',
     departments: [
@@ -33,9 +33,9 @@ function ComposePage(props) {
   return (
     <>
       <div className="mx-auto w-10/12 items-center justify-between gap-4 pt-20 md:pt-24 lg:w-7/12">
-        <div className='text-center mb-5 text-gray-500 font-bold tracking-wide text-lg'>Select Scope of the post</div>
+        <div className='mb-5 text-center text-lg font-bold tracking-wide text-gray-500'>Select Scope of the post</div>
         <div className='flex flex-wrap items-center justify-center gap-4 lg:flex-nowrap'>
-          <div className="px-5 pt-[6px] h-8 rounded-xl bg-white text-gray-500 align-middle font-bold tracking-wide text-sm">{selectedUni}</div>
+          <div className="h-8 rounded-xl bg-white px-5 align-middle text-sm font-bold tracking-wide text-gray-500 pt-[6px]">{selectedUni}</div>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button

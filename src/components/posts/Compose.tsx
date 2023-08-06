@@ -11,8 +11,8 @@ import 'katex/dist/katex.css';
 import {Button} from "~/components/ui/button";
 import {UploadIcon} from "lucide-react";
 import {effect} from "zod";
-import {Textarea} from "~/components/ui/textarea.tsx";
-import {useSession} from "~/providers/supabase-provider.tsx";
+import {Textarea} from "~/components/ui/textarea";
+import {useSession} from "~/providers/supabase-provider";
 import toast from "react-hot-toast";
 
 const MDEditor = dynamic(
@@ -98,10 +98,10 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
   }
   return (
     <div>
-      <div className='pt-7 mx-auto w-10/12 rounded-3xl mb-10'>
-        <div className="flex flex-row gap-4 justify-between mb-4 items-center mx-auto">
-          <h2 className="mt-7 text-2xl font-bold text-muted-foreground tracking-wide ml-1">Compose Post</h2>
-          <h2 className="px-7 h-8 bg-white rounded-xl mt-2 pt-[5px] text-gray-500 font-bold tracking-wide">{props.type}</h2>
+      <div className='mx-auto mb-10 w-10/12 rounded-3xl pt-7'>
+        <div className="mx-auto mb-4 flex flex-row items-center justify-between gap-4">
+          <h2 className="mt-7 ml-1 text-2xl font-bold tracking-wide text-muted-foreground">Compose Post</h2>
+          <h2 className="mt-2 h-8 rounded-xl bg-white px-7 font-bold tracking-wide text-gray-500 pt-[5px]">{props.type}</h2>
           <Button
             onClick={handlePost}
             className="
@@ -114,14 +114,14 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
               tracking-wider
               font-bold
               text-gray-500"
-          ><span className=" mr-2"><UploadIcon size={18}/></span>Post</Button>
+          ><span className="mr-2"><UploadIcon size={18}/></span>Post</Button>
         </div>
-        <div className='flex flex-row justify-evenly items-center gap-3'>
+        <div className='flex flex-row items-center justify-evenly gap-3'>
           <Textarea
-            className="bg-white rounded-xl h-1 text-lg my-4 placeholder:text-gray-400 text-muted-foreground font-semibold tracking-wide focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="my-4 h-1 rounded-xl bg-white text-lg font-semibold tracking-wide placeholder:text-gray-400 text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={'Post Title'} value={title} onChange={(e) => setTitle(e.target.value)}/>
           <Textarea
-            className="bg-white rounded-xl h-1 my-4 pt-2 pl-3 placeholder:text-gray-400 text-muted-foreground font-semibold tracking-wide focus-visible:ring-0 focus-visible:ring-offset-0"
+            className="my-4 h-1 rounded-xl bg-white pt-2 pl-3 font-semibold tracking-wide placeholder:text-gray-400 text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={'Post Summary'} value={subtitle} onChange={(e) => setSubtitle(e.target.value)}/>
         </div>
         <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'live'} value={content} onChange={setContent} />

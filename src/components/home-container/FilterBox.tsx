@@ -29,7 +29,7 @@ const FilterBox = () => {
   // console.log(postTypeFilters)
 
   return (
-    <div className='fixed top-30 left-10'>
+    <div className='fixed left-10 top-30'>
       <div
         className="flex w-60 flex-col items-start rounded-xl bg-white shadow-sm h-[32rem]">
         <h2 className="mx-auto my-5 text-xl font-bold tracking-wider text-gray-500">Filters</h2>

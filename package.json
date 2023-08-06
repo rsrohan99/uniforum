@@ -8,6 +8,7 @@
     "postinstall": "prisma generate",
     "lint": "next lint",
     "start": "next start",
+    "check-types": "tsc",
     "update-types-local": "supabase gen types typescript --local > src/server/supabase/supabaseTypes.ts",
     "update-types-remote": "supabase gen types typescript --linked --schema public > src/server/supabaseTypes.ts"
   },

@@ -18,7 +18,7 @@ function LoginButton() {
   }
 
   return (
-  <div onClick={handleSignInGoogle} className="flex gap-4 items-center mx-auto mt-24 max-w-fit rounded-2xl cursor-pointer hover:bg-accent2 hover:text-white px-12 font-semibold tracking-wider py-2 text-sm text-gray-600 ring-1 ring-accent2"><span><LogIn size={18}/></span>Log in with Google</div>
+  <div onClick={handleSignInGoogle} className="mx-auto mt-24 flex max-w-fit cursor-pointer items-center gap-4 rounded-2xl px-12 py-2 text-sm font-semibold tracking-wider text-gray-600 ring-1 ring-accent2 hover:bg-accent2 hover:text-white"><span><LogIn size={18}/></span>Log in with Google</div>
   );
 }
 

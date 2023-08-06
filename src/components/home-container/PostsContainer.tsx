@@ -2,13 +2,13 @@
 
 import React, {useEffect, useState} from "react";
 
-import Post, {PostProps} from "~/components/posts/Post";
+import Post from "~/components/posts/Post";
 import PostsSkeleton from "~/components/posts/PostsSkeleton";
-import {useSupabase} from "~/providers/supabase-provider.tsx";
+import {useSupabase} from "~/providers/supabase-provider";
 
 const PostsContainer = () => {
 
-  const [posts, setPosts] = useState<PostProps[]>([]);
+  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true)
   const clientSupabase = useSupabase()
 
