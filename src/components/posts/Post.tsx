@@ -3,6 +3,7 @@
 import React from "react";
 import {ChevronDown, ChevronUp, Flag, MessageCircle, Save, Share2} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
+import {useRouter} from "next/navigation";
 
 function timeAgo(timestamp: string): string {
   const currentDate = new Date();
@@ -66,17 +67,19 @@ export interface PostProps {
 const Post: React.FC<PostProps> = ({
   ...post
 }) => {
+  const router = useRouter()
   let h_dept, h_course;
-  if (post.department.includes('_all_~')) h_dept = ''
+  if (post.department?.includes('_all_~')) h_dept = ''
   else h_dept = post.department
-  if (post.course.includes('_all_~')) h_course = ''
+  if (post.course?.includes('_all_~')) h_course = ''
   else h_course = post.course
   let hierarchy = post.university
   if (h_dept) hierarchy += ` • ${h_dept}`
   if (h_course) hierarchy += ` • ${h_course}`
   return (
     <div
-      className="rounded-xl bg-white p-5 shadow-sm">
+      onClick={() => router.push(`/app/posts/${post.id}`)}
+      className="rounded-xl bg-white p-5 shadow-sm cursor-pointer">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Avatar className="h-8 w-8">
@@ -110,7 +113,7 @@ const Post: React.FC<PostProps> = ({
         {/*</div>*/}
       </div>
       <div className="mt-3">
-        <p className="text-sm font-medium text-gray-500">{post.title}</p>
+        <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
       </div>
       <div className="mt-7 flex items-center justify-between text-xs font-semibold text-slate-500">
         <div className="flex items-center rounded-3xl px-6 py-2 bg-background">

@@ -1,26 +1,24 @@
 'use client'
-import React, {useEffect} from 'react';
+import React, {useState} from 'react';
 // import "@uiw/react-md-editor/markdown-editor.css";
 // import "@uiw/react-markdown-preview/markdown.css";
 import dynamic from "next/dynamic";
-import { useState } from "react";
-import { getCodeString } from 'rehype-rewrite';
+import {getCodeString} from 'rehype-rewrite';
 import '~/styles/w-md.css'
 import katex from 'katex';
 import 'katex/dist/katex.css';
 import {Button} from "~/components/ui/button";
 import {UploadIcon} from "lucide-react";
-import {effect} from "zod";
 import {Textarea} from "~/components/ui/textarea";
 import {useSession} from "~/providers/supabase-provider";
 import toast from "react-hot-toast";
 
-const MDEditor = dynamic(
+export const MDEditor = dynamic(
   () => import("@uiw/react-md-editor"),
   { ssr: false }
 );
 
-const codeComponent = ({ inline, children = [], className, ...props }) => {
+export const codeComponent = ({ inline, children = [], className, ...props }) => {
   const txt = children[0] || '';
   if (inline) {
     if (typeof txt === 'string' && /^\$\$(.*)\$\$/.test(txt)) {

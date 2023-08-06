@@ -55,6 +55,8 @@ returns trigger as $$
 begin
   insert into public.uni_users (user_id, username, profile_pic, full_name, email, iss)
   values (new.id, new.id, new.raw_user_meta_data->>'avatar_url', new.raw_user_meta_data->>'name', new.raw_user_meta_data->>'email', new.raw_user_meta_data->>'iss');
+  insert into public.enrollments (user_id, course)
+  values (new.id, 'buet_all_~');
   return new;
 end;
 $$ language plpgsql security definer;
