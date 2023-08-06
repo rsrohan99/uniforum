@@ -12,6 +12,11 @@ const PostsContainer = () => {
   const [loading, setLoading] = useState(true)
   const clientSupabase = useSupabase()
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, [])
+
   useEffect(() => {
     return () => {
       const getPosts = async () => {
@@ -37,7 +42,7 @@ const PostsContainer = () => {
       }
       getPosts();
     };
-  }, []);
+  }, [hasMounted]);
 
 
   return (
