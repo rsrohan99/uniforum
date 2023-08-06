@@ -4,8 +4,10 @@ import React from "react";
 import {Button} from "~/components/ui/button";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "~/components/ui/dropdown-menu";
 import {ChevronDown, PenLine} from "lucide-react";
+import {useRouter} from "next/navigation";
 
 const MidButtons = () => {
+  const router = useRouter()
   return (
     <>
       <div className="mx-auto flex w-10/12 flex-wrap items-center justify-between gap-4 pt-20 md:pt-24 lg:w-7/12 lg:flex-nowrap">
@@ -97,7 +99,7 @@ const MidButtons = () => {
               "><ChevronDown size={18}/></span></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-20 rounded-xl font-medium text-muted-foreground" align="center" forceMount>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => router.push('/app/posts/compose/discussion')}>
                 Discussion
               </DropdownMenuItem>
               <DropdownMenuItem>

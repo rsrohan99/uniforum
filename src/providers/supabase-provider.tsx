@@ -3,6 +3,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { Session, SupabaseClient, createClientComponentClient } from '@supabase/auth-helpers-nextjs'
 import { useRouter } from 'next/navigation'
+import {Database} from "../../supabase/functions/_shared/database.types.ts";
 
 type MaybeSession = Session | null
 
@@ -20,7 +21,7 @@ export default function SupabaseProvider({
   children: React.ReactNode
   session: MaybeSession
 }) {
-  const supabase = createClientComponentClient()
+  const supabase = createClientComponentClient<Database>()
   const router = useRouter()
 
   useEffect(() => {
@@ -70,3 +71,21 @@ export const useSession = () => {
 
   return context.session
 }
+
+// export const useUniUser = async () => {
+//   let context = useContext(Context)
+//
+//   if (context === undefined) {
+//     throw new Error('useSession must be used inside SupabaseProvider')
+//   }
+//
+//   const session = context.session
+//   const supabase = context.supabase
+//   if (session) {
+//     const {data:user_data} = await supabase
+//       .from('uni_user')
+//       .select('*')
+//       .eq('user_id', session.user.id)
+//     if (user_data && user_data[0]) return user_data[0]
+//   } else return null;
+// }

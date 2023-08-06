@@ -2,14 +2,15 @@
 
 import "~/styles/globals.css";
 
-import { Inter } from "next/font/google";
+import {Inter} from "next/font/google";
 import {createServerActionClient} from "@supabase/auth-helpers-nextjs";
 import {cookies} from "next/headers";
 import SupabaseProvider from "~/providers/supabase-provider";
 import {Toaster} from "react-hot-toast";
 
 const font = Inter({
-  subsets: ['latin']
+  subsets: ['latin'],
+  display: "swap"
 })
 
 export const metadata = {

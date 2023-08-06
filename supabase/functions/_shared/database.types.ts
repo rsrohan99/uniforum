@@ -90,55 +90,6 @@ export interface Database {
           }
         ]
       }
-      post_hierarchy: {
-        Row: {
-          course: string | null
-          department: string | null
-          id: string
-          post_id: string | null
-          university: string | null
-        }
-        Insert: {
-          course?: string | null
-          department?: string | null
-          id?: string
-          post_id?: string | null
-          university?: string | null
-        }
-        Update: {
-          course?: string | null
-          department?: string | null
-          id?: string
-          post_id?: string | null
-          university?: string | null
-        }
-        Relationships: [
-          {
-            foreignKeyName: "post_hierarchy_course_fkey"
-            columns: ["course"]
-            referencedRelation: "courses"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_hierarchy_department_fkey"
-            columns: ["department"]
-            referencedRelation: "departments"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_hierarchy_post_id_fkey"
-            columns: ["post_id"]
-            referencedRelation: "posts"
-            referencedColumns: ["id"]
-          },
-          {
-            foreignKeyName: "post_hierarchy_university_fkey"
-            columns: ["university"]
-            referencedRelation: "university"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
       post_types: {
         Row: {
           name: string
@@ -154,37 +105,67 @@ export interface Database {
       posts: {
         Row: {
           content: string | null
+          course: string | null
           date_posted: string | null
+          department: string | null
           embedding: string | null
           id: string
           post_type: string | null
+          subtitle: string | null
           title: string | null
+          university: string | null
           user_id: string | null
         }
         Insert: {
           content?: string | null
+          course?: string | null
           date_posted?: string | null
+          department?: string | null
           embedding?: string | null
           id?: string
           post_type?: string | null
+          subtitle?: string | null
           title?: string | null
+          university?: string | null
           user_id?: string | null
         }
         Update: {
           content?: string | null
+          course?: string | null
           date_posted?: string | null
+          department?: string | null
           embedding?: string | null
           id?: string
           post_type?: string | null
+          subtitle?: string | null
           title?: string | null
+          university?: string | null
           user_id?: string | null
         }
         Relationships: [
+          {
+            foreignKeyName: "posts_course_fkey"
+            columns: ["course"]
+            referencedRelation: "courses"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "posts_department_fkey"
+            columns: ["department"]
+            referencedRelation: "departments"
+            referencedColumns: ["id"]
+          },
           {
             foreignKeyName: "posts_post_type_fkey"
             columns: ["post_type"]
             referencedRelation: "post_types"
             referencedColumns: ["name"]
+          },
+          {
+            foreignKeyName: "posts_university_fkey"
+            columns: ["university"]
+            referencedRelation: "university"
+            referencedColumns: ["id"]
           },
           {
             foreignKeyName: "posts_user_id_fkey"
@@ -260,6 +241,20 @@ export interface Database {
       [_ in never]: never
     }
     Functions: {
+      insert_post: {
+        Args: {
+          p_content: string
+          p_title: string
+          p_subtitle: string
+          p_post_type: string
+          p_content_embedding: string
+          p_course: string
+          p_department: string
+          p_uni: string
+          p_user_id: string
+        }
+        Returns: undefined
+      }
       ivfflathandler: {
         Args: {
           "": unknown

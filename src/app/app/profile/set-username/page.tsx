@@ -1,9 +1,9 @@
 'use client'
 
-import {Input} from "~/components/ui/input";
+import {Input} from "~/components/ui/input.tsx";
 import React, {useEffect, useState} from "react";
-import {Button} from "~/components/ui/button";
-import {useSession, useSupabase} from "~/providers/supabase-provider";
+import {Button} from "~/components/ui/button.tsx";
+import {useSession, useSupabase} from "~/providers/supabase-provider.tsx";
 import toast from 'react-hot-toast';
 import {useRouter} from "next/navigation";
 

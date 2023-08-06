@@ -1,0 +1,7 @@
+.w-md-editor {
+    @apply rounded-xl !important
+}
+
+.w-md-editor-text {
+    @apply text-sm tracking-wider p-5 !important
+}

@@ -3,13 +3,14 @@
 import React, {useEffect, useState} from "react";
 
 import Post, {PostProps} from "~/components/posts/Post";
-import {clientSupabase} from "~/server/supabase/supabaseClient";
 import PostsSkeleton from "~/components/posts/PostsSkeleton";
+import {useSupabase} from "~/providers/supabase-provider.tsx";
 
 const PostsContainer = () => {
 
   const [posts, setPosts] = useState<PostProps[]>([]);
   const [loading, setLoading] = useState(true)
+  const clientSupabase = useSupabase()
 
   useEffect(() => {
     return () => {
@@ -22,10 +23,13 @@ const PostsContainer = () => {
             user: user_id(username, profile_pic),
             title,
             date_posted,
-            hierarchy,
-            content,
-            post_type
+            subtitle,
+            post_type,
+            university,
+            department,
+            course
           `)
+          .order('date_posted', {ascending: false})
         if (posts_error) throw posts_error;
         // console.log(posts)
         setPosts(posts)
@@ -36,22 +40,6 @@ const PostsContainer = () => {
   }, []);
 
 
-  // const posts = [
-  //   {
-  //     id: 'p1',
-  //     user: {
-  //       name: "JohnDoe",
-  //       avatar: "https://picsum.photos/200/300"
-  //     },
-  //     title: "Conference on Computer Vision will be held on tomorrow",
-  //     timestamp: 1690293118,
-  //     hierarchy: "BUET/CSE",
-  //     body: "A conference on computer vision will be held on tomorrow at 10:00 AM, 21st January, 2023, arranged by CSE, BUET. All the students are requested to join the conference.",
-  //     tags: ["python", "js", "c++"],
-  //     upvotes: 220,
-  //     replies: 5
-  //   }
-  // ]
   return (
     <div
       className="flex w-10/12 flex-col gap-4 rounded-xl lg:w-7/12">
