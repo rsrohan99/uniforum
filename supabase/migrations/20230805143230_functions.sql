@@ -47,6 +47,27 @@ END;
 $$
 LANGUAGE plpgsql;
 
+drop function if exists search;
+create or replace function search (
+  query_embedding vector(1536),
+  match_threshold float,
+  match_count int
+)
+returns table (
+  id uuid,
+  similarity float
+)
+language sql stable
+as $$
+  select
+    posts.id,
+    1 - (posts.embedding <=> query_embedding) as similarity
+  from posts
+  where 1 - (posts.embedding <=> query_embedding) > match_threshold
+  order by similarity desc
+  limit match_count;
+$$;
+
 
 DROP TRIGGER IF EXISTS on_auth_user_created on auth.users;
 drop function if exists public.handle_new_user;

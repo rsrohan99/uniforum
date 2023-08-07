@@ -7,6 +7,7 @@ import '~/styles/w-md.css'
 import 'katex/dist/katex.css';
 import {MDEditor} from "~/components/posts/Compose";
 import {codeComponent} from "~/components/posts/Compose";
+import PostsSkeletonFull from "~/components/posts/PostSkeletonFull";
 
 
 export default function PostPage({ params }: { params: { id: string } }) {
@@ -45,7 +46,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
   return (
     <div className='mx-auto pt-20 w-10/12 flex-col gap-3 rounded-xl lg:w-7/12'>
       {loading ? (
-        <PostsSkeleton/>
+        <PostsSkeletonFull/>
       ) : (
         <>
           <div className='mb-2'>

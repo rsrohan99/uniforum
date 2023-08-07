@@ -54,9 +54,9 @@ export interface PostProps {
   title: string;
   subtitle: string;
   date_posted: string;
-  // content: string;
-  upvotes: number;
-  replies: number;
+  content?: string;
+  // upvotes: number;
+  // replies: number;
   post_type: string;
   university: string,
   department: string,

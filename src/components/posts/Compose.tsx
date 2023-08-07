@@ -50,7 +50,7 @@ interface ComposeProps {
   department: string
 }
 
-const showErrorToast = (message:string) => {
+export const showErrorToast = (message:string) => {
   toast.error(message, {
     position: "bottom-right"
   })
