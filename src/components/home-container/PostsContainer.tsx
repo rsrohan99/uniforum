@@ -9,6 +9,9 @@ import { useCoursesFilters, usePostTypeFilters } from "~/hooks/usePostFilters";
 import { usePostsHook } from "~/hooks/usePosts";
 import {useSearchQueryHook} from "~/hooks/useSearchQuery";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
+import {usePostsLoading} from "~/hooks/usePostsLoading";
+import {usePathname, useRouter} from "next/navigation";
+import NProgress from "nprogress";
 
 const PostsContainer = () => {
 
@@ -17,40 +20,51 @@ const PostsContainer = () => {
   const { getLatestPostIds, post_ids } = usePostsHook()
   const {toggleTriggerPostRefresh, triggerPostRefresh} = useTriggerPostRefresh()
   // const [triggerPostsRefresh, setTriggerPostsRefresh] = useState(false);
-  const [loading, setLoading] = useState(true)
+  // const [postsLoading, setPostsLoading] = useState(true)
+  const {getLatestPostsLoading, setPostsLoading} = usePostsLoading();
   const clientSupabase = useSupabase()
   const { postTypesFilters, getLatestPostTypeFilters } = usePostTypeFilters()
   const { coursesFilters, getLatestCoursesFilters, setCoursesFilters } = useCoursesFilters();
   const session = useSession()
+  const pathname = usePathname()
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
+    NProgress.done()
   }, [])
 
+  // useEffect(() => {
+  //   return () => {
+  //     if (posts.length === 0 && !getLatestQuery()) toggleTriggerPostRefresh();
+  //   };
+  // }, [query]);
+  //
   useEffect(() => {
     return () => {
-      if (posts.length === 0 && !getLatestQuery()) toggleTriggerPostRefresh();
+      const getCoursesFilter = async () => {
+        const { data: courses_data } = await clientSupabase
+          .from('enrollments')
+          .select('course')
+          .eq('user_id', session?.user.id)
+        if (courses_data && courses_data.length > 0) {
+          setCoursesFilters(courses_data.filter(course => !course.course.includes('_all_~')).map(course => ({
+            courseId: course.course,
+            checked: false
+          })))
+        }
+      }
+      getCoursesFilter();
     };
-  }, [query]);
+  }, [hasMounted]);
+
   
 
   useEffect(() => {
     return () => {
+      if (pathname !== '/app') return
       const getPosts = async () => {
-        if (getLatestCoursesFilters().length === 0) {
-          const { data: courses_data } = await clientSupabase
-            .from('enrollments')
-            .select('course')
-            .eq('user_id', session?.user.id)
-          if (courses_data && courses_data.length > 0) {
-            setCoursesFilters(courses_data.filter(course => !course.course.includes('_all_~')).map(course => ({
-              courseId: course.course,
-              checked: false
-            })))
-          }
-        }
-        setLoading(true)
+        setPostsLoading(true)
         let queryBuilder = clientSupabase
           .from('posts')
           .select(`
@@ -79,7 +93,7 @@ const PostsContainer = () => {
         if (posts_error) throw posts_error;
         // console.log(posts)
         setPosts(posts)
-        setLoading(false)
+        setPostsLoading(false)
       }
       getPosts();
     };
@@ -89,7 +103,7 @@ const PostsContainer = () => {
   return (
     <div
       className="flex w-10/12 flex-col gap-4 rounded-xl lg:w-7/12">
-      {loading ? (
+      {getLatestPostsLoading() ? (
         <>
           <PostsSkeleton />
           <PostsSkeleton />

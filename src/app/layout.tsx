@@ -7,6 +7,7 @@ import {createServerActionClient} from "@supabase/auth-helpers-nextjs";
 import {cookies} from "next/headers";
 import SupabaseProvider from "~/providers/supabase-provider";
 import {Toaster} from "react-hot-toast";
+import ProgressBar from "~/components/home-container/ProgressBar";
 export const dynamic = 'force-dynamic'
 
 
@@ -31,6 +32,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#000000" />
         <body className={`${font.className} bg-background`}>
         <SupabaseProvider session={data.session}>
+          {/*<ProgressBar/>*/}
           {children}
         </SupabaseProvider>
         <Toaster/>

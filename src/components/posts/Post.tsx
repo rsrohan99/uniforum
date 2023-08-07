@@ -1,25 +1,13 @@
 'use client'
 
 import React from "react";
-import {ChevronDown, ChevronUp, Flag, MessageCircle, Save, Share2, Trash} from 'lucide-react';
+import {ChevronDown, ChevronUp, Download, Flag, MessageCircle, Share2, Trash} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import {useRouter} from "next/navigation";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "~/components/ui/alert-dialog"
-import { Button } from "~/components/ui/button"
+import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,} from "~/components/ui/alert-dialog"
 import {showErrorToast} from "~/components/posts/Compose";
 import toast from "react-hot-toast";
-import {usePostsHook} from "~/hooks/usePosts";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 
 function timeAgo(timestamp: string): string {
@@ -149,8 +137,8 @@ const Post: React.FC<PostProps> = ({
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
-                <AlertDialogCancel>Cancel</AlertDialogCancel>
-                <AlertDialogAction onClick={deletePost}>Continue</AlertDialogAction>
+                <AlertDialogCancel className='focus-visible:ring-0 focus-visible:ring-offset-0'>Cancel</AlertDialogCancel>
+                <AlertDialogAction className='focus-visible:ring-0 focus-visible:ring-offset-0' onClick={deletePost}>Continue</AlertDialogAction>
               </AlertDialogFooter>
             </AlertDialogContent>
           </AlertDialog>
@@ -191,7 +179,7 @@ const Post: React.FC<PostProps> = ({
           <p className="ml-2">Share</p>
         </div>
         <div className="flex items-center">
-          <Save size={18} />
+          <Download size={18} />
           <p className="ml-2">Save</p>
         </div>
         <div className="flex items-center">

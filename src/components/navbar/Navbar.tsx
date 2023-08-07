@@ -1,5 +1,3 @@
-import Link from "next/link"
-
 import Search from "~/components/navbar/Search"
 import Logo from "~/components/navbar/Logo"
 import UserMenu from "~/components/navbar/UserMenu";
