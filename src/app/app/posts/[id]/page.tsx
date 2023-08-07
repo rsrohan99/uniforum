@@ -15,6 +15,11 @@ export default function PostPage({ params }: { params: { id: string } }) {
   const clientSupabase = useSupabase()
   const [post, setPost] = useState<any>()
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, [])
+
   useEffect(() => {
     return () => {
       const getPost = async () => {
@@ -42,7 +47,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
       }
       getPost();
     };
-  }, []);
+  }, [hasMounted]);
   return (
     <div className='mx-auto pt-20 w-10/12 flex-col gap-3 rounded-xl lg:w-7/12'>
       {loading ? (
