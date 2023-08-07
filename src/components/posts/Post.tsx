@@ -1,9 +1,26 @@
 'use client'
 
 import React from "react";
-import {ChevronDown, ChevronUp, Flag, MessageCircle, Save, Share2} from 'lucide-react';
+import {ChevronDown, ChevronUp, Flag, MessageCircle, Save, Share2, Trash} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import {useRouter} from "next/navigation";
+import {useSession, useSupabase} from "~/providers/supabase-provider";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "~/components/ui/alert-dialog"
+import { Button } from "~/components/ui/button"
+import {showErrorToast} from "~/components/posts/Compose";
+import toast from "react-hot-toast";
+import {usePostsHook} from "~/hooks/usePosts";
+import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 
 function timeAgo(timestamp: string): string {
   const currentDate = new Date();
@@ -48,6 +65,7 @@ export interface PostProps {
   // post: {
   id: string,
   user: {
+    user_id: string,
     username: string;
     profile_pic: string;
   };
@@ -76,10 +94,28 @@ const Post: React.FC<PostProps> = ({
   let hierarchy = post.university
   if (h_dept) hierarchy += ` • ${h_dept}`
   if (h_course) hierarchy += ` • ${h_course}`
+
+  const session = useSession();
+  const supabase = useSupabase();
+  const {toggleTriggerPostRefresh} = useTriggerPostRefresh()
+
+  const deletePost = async () => {
+    const {error} = await supabase
+      .from('posts')
+      .delete()
+      .eq('id', post.id)
+
+    if (error) showErrorToast("Error while deleting your post.")
+    else {
+      toast.success("Post deleted", {position: "bottom-right"})
+      toggleTriggerPostRefresh();
+    }
+
+  }
+
   return (
     <div
-      onClick={() => router.push(`/app/posts/${post.id}`)}
-      className="rounded-xl bg-white p-5 shadow-sm cursor-pointer">
+      className="rounded-xl bg-white p-5 shadow-sm">
       <div className="flex items-center justify-between">
         <div className="flex items-center">
           <Avatar className="h-8 w-8">
@@ -99,9 +135,32 @@ const Post: React.FC<PostProps> = ({
         <div>
           <p className="rounded-2xl px-4 py-2 text-xs font-bold tracking-wide text-gray-500 bg-background">{post.post_type}</p>
         </div>
+        {(post.user.user_id === session?.user.id) && (
+          <AlertDialog>
+            <AlertDialogTrigger asChild>
+              <Trash className="cursor-pointer h-8 w-8 p-2 bg-background text-red-400 rounded-full" size={18} />
+            </AlertDialogTrigger>
+            <AlertDialogContent>
+              <AlertDialogHeader>
+                <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+                <AlertDialogDescription>
+                  This action cannot be undone. This will permanently delete your
+                  post and remove your it from our servers.
+                </AlertDialogDescription>
+              </AlertDialogHeader>
+              <AlertDialogFooter>
+                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                <AlertDialogAction onClick={deletePost}>Continue</AlertDialogAction>
+              </AlertDialogFooter>
+            </AlertDialogContent>
+          </AlertDialog>
+        )}
       </div>
-      <div className="mt-1 flex">
-        <h5 className="text-xl font-bold text-gray-600">{post.title}</h5>
+      <div
+        onClick={() => router.push(`/app/posts/${post.id}`)}
+        className="mt-1 flex cursor-pointer">
+        <h5
+          className="text-xl font-bold text-gray-600">{post.title}</h5>
         {/*<div className="ml-5 flex">*/}
         {/*  {post.tags.map((tag, index) => (*/}
         {/*    <div*/}
@@ -112,7 +171,9 @@ const Post: React.FC<PostProps> = ({
         {/*  ))}*/}
         {/*</div>*/}
       </div>
-      <div className="mt-3">
+      <div
+        onClick={() => router.push(`/app/posts/${post.id}`)}
+        className="mt-3 cursor-pointer">
         <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
       </div>
       <div className="mt-7 flex items-center justify-between text-xs font-semibold text-slate-500">

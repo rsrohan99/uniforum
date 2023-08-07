@@ -114,7 +114,7 @@ create policy "users can only insert their posts" on posts
 create policy "users can update their posts" on posts
   for update using(auth.uid() = user_id);
 create policy "users can delete their posts" on posts
-  for update using(auth.uid() = user_id);
+  for delete using(auth.uid() = user_id);
 
 -- drop table if exists post_hierarchy;
 -- create table post_hierarchy

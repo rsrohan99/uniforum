@@ -29,7 +29,7 @@ export default function PostPage({ params }: { params: { id: string } }) {
           .from('posts')
           .select(`
             id,
-            user: user_id(username, profile_pic),
+            user: user_id(user_id, username, profile_pic),
             title,
             date_posted,
             subtitle,

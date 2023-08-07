@@ -8,13 +8,15 @@ import { useSession, useSupabase } from "~/providers/supabase-provider";
 import { useCoursesFilters, usePostTypeFilters } from "~/hooks/usePostFilters";
 import { usePostsHook } from "~/hooks/usePosts";
 import {useSearchQueryHook} from "~/hooks/useSearchQuery";
+import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 
 const PostsContainer = () => {
 
   const [posts, setPosts] = useState([]);
   const {query, getLatestQuery} = useSearchQueryHook()
   const { getLatestPostIds, post_ids } = usePostsHook()
-  const [triggerPostsRefresh, setTriggerPostsRefresh] = useState(false);
+  const {toggleTriggerPostRefresh, triggerPostRefresh} = useTriggerPostRefresh()
+  // const [triggerPostsRefresh, setTriggerPostsRefresh] = useState(false);
   const [loading, setLoading] = useState(true)
   const clientSupabase = useSupabase()
   const { postTypesFilters, getLatestPostTypeFilters } = usePostTypeFilters()
@@ -28,7 +30,7 @@ const PostsContainer = () => {
 
   useEffect(() => {
     return () => {
-      if (posts.length === 0 && !getLatestQuery()) setTriggerPostsRefresh(!triggerPostsRefresh);
+      if (posts.length === 0 && !getLatestQuery()) toggleTriggerPostRefresh();
     };
   }, [query]);
   
@@ -53,7 +55,7 @@ const PostsContainer = () => {
           .from('posts')
           .select(`
             id,
-            user: user_id(username, profile_pic),
+            user: user_id(user_id, username, profile_pic),
             title,
             date_posted,
             subtitle,
@@ -81,7 +83,7 @@ const PostsContainer = () => {
       }
       getPosts();
     };
-  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostsRefresh]);
+  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh]);
 
 
   return (

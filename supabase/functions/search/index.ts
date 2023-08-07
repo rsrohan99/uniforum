@@ -45,7 +45,8 @@ serve(async (req) => {
     const { data, error } = await supabaseClient
       .rpc('search', {
         query_embedding: queryEmbedding,
-        match_threshold: 0.76,
+        // match_threshold: 0.76,
+        match_threshold: 0.70,
         match_count: 20,
       })
 

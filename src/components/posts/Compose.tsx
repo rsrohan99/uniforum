@@ -12,6 +12,7 @@ import {UploadIcon} from "lucide-react";
 import {Textarea} from "~/components/ui/textarea";
 import {useSession} from "~/providers/supabase-provider";
 import toast from "react-hot-toast";
+import {useRouter} from "next/navigation";
 
 export const MDEditor = dynamic(
   () => import("@uiw/react-md-editor"),
@@ -61,6 +62,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
   const [title, setTitle] = useState("");
   const [subtitle, setSubtitle] = useState("");
   const session = useSession()
+  const router = useRouter()
 
   const handlePost = async () => {
     if (!title || !content) {
@@ -90,6 +92,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
       toast.success(resp_json.message, {
         position: "bottom-right"
       })
+      router.push('/app')
     } else showErrorToast(resp_json.error)
 
     // console.log(props)
