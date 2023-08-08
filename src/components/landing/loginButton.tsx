@@ -41,7 +41,7 @@ function LoginButton() {
     })
     localStorage.setItem('signedIn', "true")
     // setSignedIn(true)
-    // NProgress.start()
+    NProgress.start()
     // toast.loading("Logging you in...", {id: 'login'})
     router.refresh()
   }
