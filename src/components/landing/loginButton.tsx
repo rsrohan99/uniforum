@@ -16,7 +16,7 @@ function LoginButton() {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
-    NProgress.done()
+    if (!searchParams.toString()) NProgress.done()
   }, [])
 
   useEffect(() => {
@@ -28,7 +28,7 @@ function LoginButton() {
         NProgress.inc()
       } else NProgress.done()
     };
-  }, [searchParams]);
+  }, [hasMounted, searchParams]);
   
 
   const handleSignInGoogle = async () => {
