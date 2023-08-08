@@ -43,6 +43,7 @@ const UserMenu = () => {
     toast.remove('logout')
     NProgress.start()
     setSignedIn(false)
+    localStorage.setItem('signedIn', "")
     // router.refresh();
     router.push('/')
   }

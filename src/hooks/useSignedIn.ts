@@ -8,7 +8,7 @@ interface SignedInHook {
 
 
 export const useSignedIn = create<SignedInHook>((set, getState) => ({
-  signedIn: false,
+  signedIn: (typeof window !== 'undefined')? !!localStorage.getItem('signedIn'): false,
   getLatestSignedIn: () => getState().signedIn,
   setSignedIn: (loading: boolean) => set({signedIn: loading}),
 }));

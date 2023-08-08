@@ -25,7 +25,7 @@ function LoginButton() {
 
   useEffect(() => {
     return () => {
-      console.log(getLatestSignedIn())
+      // console.log(getLatestSignedIn())
       if (getLatestSignedIn()) {
         toast.loading("Logging you in...", {id: 'login'})
         NProgress.start()
@@ -39,9 +39,10 @@ function LoginButton() {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     })
-    setSignedIn(true)
-    NProgress.start()
-    toast.loading("Logging you in...", {id: 'login'})
+    localStorage.setItem('signedIn', "true")
+    // setSignedIn(true)
+    // NProgress.start()
+    // toast.loading("Logging you in...", {id: 'login'})
     router.refresh()
   }
 
