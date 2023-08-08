@@ -104,7 +104,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
   return (
     <div>
       <div className='mx-auto mb-10 w-10/12 rounded-3xl pt-7'>
-        <div className="mx-auto mb-4 flex flex-row items-center justify-between gap-4">
+        <div className="mx-auto mb-4 flex flex-row flex-wrap items-center justify-between gap-4">
           <h2 className="mt-7 ml-1 text-2xl font-bold tracking-wide text-muted-foreground">Compose Post</h2>
           <h2 className="mt-2 h-8 rounded-xl bg-white px-7 font-bold tracking-wide text-gray-500 pt-[5px]">{props.type}</h2>
           <Button

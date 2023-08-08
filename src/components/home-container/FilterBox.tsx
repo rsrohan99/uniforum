@@ -23,9 +23,9 @@ const FilterBox = () => {
   // console.log(postTypeFilters)
 
   return (
-    <div className='fixed left-10 top-30'>
+    <div className='invisible lg:visible fixed left-5 xl:left-10 top-30'>
       <div
-        className="flex w-60 flex-col items-start rounded-xl bg-white shadow-sm h-[32rem]">
+        className="flex w-48 xl:w-56 flex-col items-start rounded-xl bg-white shadow-sm h-[32rem]">
         <h2 className="mx-auto my-5 text-xl font-bold tracking-wider text-gray-500">Filters</h2>
         <div className='flex flex-col gap-1'>
           <h2 className="my-2 ml-5 text-lg font-bold tracking-wide text-gray-500">Post Type</h2>

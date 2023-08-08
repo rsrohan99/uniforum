@@ -112,7 +112,7 @@ const Post: React.FC<PostProps> = ({
   return (
     <div
       className="rounded-xl bg-white p-5 shadow-sm">
-      <div className="flex items-center justify-between">
+      <div className="flex mb-2 flex-wrap gap-2 items-center justify-between">
         <div className="flex items-center">
           <Avatar className="h-8 w-8">
             <AvatarImage src={post.user.profile_pic}/>
@@ -172,7 +172,7 @@ const Post: React.FC<PostProps> = ({
           <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
         </div>
       </div>
-      <div className="mt-7 flex items-center justify-between text-xs font-semibold text-slate-500">
+      <div className="mt-7 flex flex-wrap gap-3 items-center justify-between text-xs font-semibold text-slate-500">
         <div className="flex items-center rounded-3xl px-6 py-2 bg-background">
           <ChevronUp size={18} className="text-accent2" />
           <p className="ml-4 text-accent2">{post.upvotes}</p>
