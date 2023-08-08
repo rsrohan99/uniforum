@@ -1,6 +1,6 @@
 'use client'
 
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {LogIn} from "lucide-react";
 import {useSupabase} from "~/providers/supabase-provider";
@@ -13,15 +13,20 @@ function LoginButton() {
   const supabase = useSupabase()
   const searchParams = useSearchParams()
 
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+    NProgress.done()
+  }, [])
 
   useEffect(() => {
     return () => {
+      console.log(searchParams.toString())
       if (searchParams.toString()) {
         toast.loading("Logging you in...", {id: 'login'})
         NProgress.start()
         NProgress.inc()
       } else NProgress.done()
-      console.log(searchParams.toString())
     };
   }, [searchParams]);
   

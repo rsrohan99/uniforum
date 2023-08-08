@@ -41,7 +41,7 @@ const UserMenu = () => {
     toast.remove('logout')
     NProgress.start()
     // router.refresh();
-    router.replace('/')
+    router.push('/')
   }
 
 

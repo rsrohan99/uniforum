@@ -1,11 +1,12 @@
 'use client'
 
 import {Input} from "~/components/ui/input";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {Button} from "~/components/ui/button";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
 import toast from 'react-hot-toast';
 import {useRouter} from "next/navigation";
+import NProgress from "nprogress";
 
 const SetUsernamePage = () => {
   const supabase = useSupabase();
@@ -13,15 +14,28 @@ const SetUsernamePage = () => {
   const router = useRouter()
   const [username, setUsername] = useState("")
 
+  useEffect(() => {
+    toast.remove('login')
+    NProgress.done()
+  }, [])
 
   const showErrorToast = (message:string) => {
     toast.error(message, {
       position: "bottom-right"
     })
   }
+
+  function isValidUserHandle(input: string): boolean {
+    const regex = /^[a-zA-Z0-9_]+$/;
+    return regex.test(input);
+  }
   const handleSetUsername = async () => {
     if (!username) {
       showErrorToast("Enter your username first")
+      return
+    }
+    if (!isValidUserHandle(username)) {
+      showErrorToast("Username can only include letters, numbers and underscore.")
       return
     }
     const user = session?.user
@@ -48,6 +62,7 @@ const SetUsernamePage = () => {
         console.log(set_username_error)
       }
       else {
+        NProgress.start()
         toast.success("Username changed successfully.", {
           position: "bottom-right"
         })

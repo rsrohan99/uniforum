@@ -1,5 +1,5 @@
 'use client'
-import {useRouter} from "next/navigation";
+import {usePathname, useRouter} from "next/navigation";
 import { cn } from "~/utils/utils"
 import React from "react";
 import {useSearchQueryHook} from "~/hooks/useSearchQuery";
@@ -11,11 +11,12 @@ interface CNProps {
 }
 const Logo: React.FC<CNProps> = ({className}) => {
   const router = useRouter();
+  const pathname = usePathname()
   const {setQuery} = useSearchQueryHook()
   const {setPostIds} = usePostsHook()
   return (
     <div className={cn("text-lg cursor-pointer tracking-widest", className)} onClick={() => {
-      NProgress.start()
+      if (pathname !== '/app') NProgress.start()
       setQuery("")
       setPostIds([])
       router.push('/app')
