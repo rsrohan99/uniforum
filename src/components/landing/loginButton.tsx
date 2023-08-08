@@ -5,6 +5,7 @@ import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import {LogIn} from "lucide-react";
 import {useSupabase} from "~/providers/supabase-provider";
 import NProgress from "nprogress";
+import toast from "react-hot-toast";
 
 
 function LoginButton() {
@@ -16,10 +17,11 @@ function LoginButton() {
   useEffect(() => {
     return () => {
       if (searchParams.toString()) {
+        toast.loading("Logging you in...", {id: 'login'})
         NProgress.start()
         NProgress.inc()
       } else NProgress.done()
-      // console.log(searchParams.toString())
+      console.log(searchParams.toString())
     };
   }, [searchParams]);
   
@@ -29,6 +31,7 @@ function LoginButton() {
       provider: 'google',
     })
     NProgress.start()
+    toast.loading("Logging you in...", {id: 'login'})
     router.refresh()
   }
 

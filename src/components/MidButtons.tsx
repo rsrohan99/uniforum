@@ -5,6 +5,7 @@ import {Button} from "~/components/ui/button";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "~/components/ui/dropdown-menu";
 import {ChevronDown, PenLine} from "lucide-react";
 import {useRouter} from "next/navigation";
+import NProgress from "nprogress";
 
 const MidButtons = () => {
   const router = useRouter()
@@ -99,7 +100,10 @@ const MidButtons = () => {
               "><ChevronDown size={18}/></span></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-20 rounded-xl font-medium text-muted-foreground" align="center" forceMount>
-              <DropdownMenuItem onClick={() => router.push('/app/posts/compose/discussion')}>
+              <DropdownMenuItem onClick={() => {
+                NProgress.start()
+                router.push('/app/posts/compose/discussion')
+              }}>
                 Discussion
               </DropdownMenuItem>
               <DropdownMenuItem>

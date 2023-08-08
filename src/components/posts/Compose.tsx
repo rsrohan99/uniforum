@@ -13,6 +13,7 @@ import {Textarea} from "~/components/ui/textarea";
 import {useSession} from "~/providers/supabase-provider";
 import toast from "react-hot-toast";
 import {useRouter} from "next/navigation";
+import NProgress from "nprogress";
 
 export const MDEditor = dynamic(
   () => import("@uiw/react-md-editor"),
@@ -69,6 +70,8 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
       showErrorToast('Neither title nor the content of the post can be empty.')
       return
     }
+    NProgress.start()
+    toast.loading("Posting...", {position: "bottom-right", id: 'posting'})
     const jwt = session?.access_token;
     const response = await fetch(`${process.env.NEXT_PUBLIC_EDGE_URL}/create-post`, {
       method: 'POST',
@@ -89,6 +92,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
 
     const resp_json = await response.json()
     if (response.status === 200) {
+      toast.remove('posting')
       toast.success(resp_json.message, {
         position: "bottom-right"
       })

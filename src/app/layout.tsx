@@ -32,7 +32,7 @@ async function RootLayout({ children }: { children: React.ReactNode }) {
         <meta name="theme-color" content="#000000" />
         <body className={`${font.className} bg-background`}>
         <SupabaseProvider session={data.session}>
-          {/*<ProgressBar/>*/}
+          <ProgressBar/>
           {children}
         </SupabaseProvider>
         <Toaster/>

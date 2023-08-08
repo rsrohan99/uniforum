@@ -19,6 +19,8 @@ import {
 } from "~/components/ui/dropdown-menu"
 import NotificationBell from "~/components/navbar/NotificationBell";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
+import toast from "react-hot-toast";
+import NProgress from "nprogress";
 
 
 const UserMenu = () => {
@@ -34,7 +36,10 @@ const UserMenu = () => {
   // }, [currentSession])
 
   const handleSignOut = async () => {
+    toast.loading("Logging out...", {id:'logout'})
     const {error} = await supabase.auth.signOut();
+    toast.remove('logout')
+    NProgress.start()
     // router.refresh();
     router.replace('/')
   }

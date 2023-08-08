@@ -12,6 +12,7 @@ import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 import {usePostsLoading} from "~/hooks/usePostsLoading";
 import {usePathname, useRouter} from "next/navigation";
 import NProgress from "nprogress";
+import toast from "react-hot-toast";
 
 const PostsContainer = () => {
 
@@ -31,6 +32,7 @@ const PostsContainer = () => {
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
     setHasMounted(true);
+    toast.remove('login')
     NProgress.done()
   }, [])
 

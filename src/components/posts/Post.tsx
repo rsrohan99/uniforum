@@ -9,6 +9,7 @@ import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, A
 import {showErrorToast} from "~/components/posts/Compose";
 import toast from "react-hot-toast";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
+import NProgress from "nprogress";
 
 function timeAgo(timestamp: string): string {
   const currentDate = new Date();
@@ -88,6 +89,7 @@ const Post: React.FC<PostProps> = ({
   const {toggleTriggerPostRefresh} = useTriggerPostRefresh()
 
   const deletePost = async () => {
+    toast.loading("Deleting the post", {position: "bottom-right", id: 'deleting'})
     const {error} = await supabase
       .from('posts')
       .delete()
@@ -95,10 +97,16 @@ const Post: React.FC<PostProps> = ({
 
     if (error) showErrorToast("Error while deleting your post.")
     else {
+      toast.remove('deleting')
       toast.success("Post deleted", {position: "bottom-right"})
       toggleTriggerPostRefresh();
     }
 
+  }
+
+  const goToPostPage = () => {
+    NProgress.start()
+    router.push(`/app/posts/${post.id}`)
   }
 
   return (
@@ -144,25 +152,25 @@ const Post: React.FC<PostProps> = ({
           </AlertDialog>
         )}
       </div>
-      <div
-        onClick={() => router.push(`/app/posts/${post.id}`)}
-        className="mt-1 flex cursor-pointer">
-        <h5
-          className="text-xl font-bold text-gray-600">{post.title}</h5>
-        {/*<div className="ml-5 flex">*/}
-        {/*  {post.tags.map((tag, index) => (*/}
-        {/*    <div*/}
-        {/*      key={index}*/}
-        {/*      className="ml-1 h-6 rounded-2xl px-4 py-1 align-middle text-xs font-semibold tracking-wide text-white bg-accent2">*/}
-        {/*      #&nbsp;{tag}*/}
-        {/*    </div>*/}
-        {/*  ))}*/}
-        {/*</div>*/}
-      </div>
-      <div
-        onClick={() => router.push(`/app/posts/${post.id}`)}
-        className="mt-3 cursor-pointer">
-        <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
+      <div onClick={goToPostPage} className='cursor-pointer'>
+        <div
+          className="mt-1 flex">
+          <h5
+            className="text-xl font-bold text-gray-600">{post.title}</h5>
+          {/*<div className="ml-5 flex">*/}
+          {/*  {post.tags.map((tag, index) => (*/}
+          {/*    <div*/}
+          {/*      key={index}*/}
+          {/*      className="ml-1 h-6 rounded-2xl px-4 py-1 align-middle text-xs font-semibold tracking-wide text-white bg-accent2">*/}
+          {/*      #&nbsp;{tag}*/}
+          {/*    </div>*/}
+          {/*  ))}*/}
+          {/*</div>*/}
+        </div>
+        <div
+          className="mt-3">
+          <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
+        </div>
       </div>
       <div className="mt-7 flex items-center justify-between text-xs font-semibold text-slate-500">
         <div className="flex items-center rounded-3xl px-6 py-2 bg-background">
