@@ -8,7 +8,7 @@ interface SignedInHook {
 
 
 export const useSignedIn = create<SignedInHook>((set, getState) => ({
-  signedIn: true,
+  signedIn: false,
   getLatestSignedIn: () => getState().signedIn,
   setSignedIn: (loading: boolean) => set({signedIn: loading}),
 }));
