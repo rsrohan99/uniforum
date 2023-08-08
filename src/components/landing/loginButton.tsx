@@ -6,35 +6,40 @@ import {LogIn} from "lucide-react";
 import {useSupabase} from "~/providers/supabase-provider";
 import NProgress from "nprogress";
 import toast from "react-hot-toast";
+import {useSignedIn} from "~/hooks/useSignedIn";
 
 
 function LoginButton() {
   const router = useRouter()
   const supabase = useSupabase()
-  const searchParams = useSearchParams()
+  // const searchParams = useSearchParams()
 
   const [hasMounted, setHasMounted] = useState(false);
+  // const [signedIn, setsignedIn] = useState(false);
+  const {signedIn, getLatestSignedIn, setSignedIn} = useSignedIn()
+
   useEffect(() => {
     setHasMounted(true);
-    if (!searchParams.toString()) NProgress.done()
+    if (!getLatestSignedIn()) NProgress.done()
   }, [])
 
   useEffect(() => {
     return () => {
-      console.log(searchParams.toString())
-      if (searchParams.toString()) {
+      console.log(getLatestSignedIn())
+      if (getLatestSignedIn()) {
         toast.loading("Logging you in...", {id: 'login'})
         NProgress.start()
         NProgress.inc()
       } else NProgress.done()
     };
-  }, [hasMounted, searchParams]);
+  }, [signedIn, hasMounted]);
   
 
   const handleSignInGoogle = async () => {
     const { data, error } = await supabase.auth.signInWithOAuth({
       provider: 'google',
     })
+    setSignedIn(true)
     NProgress.start()
     toast.loading("Logging you in...", {id: 'login'})
     router.refresh()

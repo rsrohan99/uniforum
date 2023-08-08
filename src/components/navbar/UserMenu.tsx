@@ -21,6 +21,7 @@ import NotificationBell from "~/components/navbar/NotificationBell";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
 import toast from "react-hot-toast";
 import NProgress from "nprogress";
+import {useSignedIn} from "~/hooks/useSignedIn";
 
 
 const UserMenu = () => {
@@ -28,6 +29,7 @@ const UserMenu = () => {
   const supabase = useSupabase()
   const currentSession = useSession()
   const defaultAvatarUrl = '/images/placeholder.jpg'
+  const {setSignedIn} = useSignedIn()
   // const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl)
 
   // useEffect(() => {
@@ -40,6 +42,7 @@ const UserMenu = () => {
     const {error} = await supabase.auth.signOut();
     toast.remove('logout')
     NProgress.start()
+    setSignedIn(false)
     // router.refresh();
     router.push('/')
   }
