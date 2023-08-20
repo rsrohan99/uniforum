@@ -14,6 +14,20 @@ const LandingPage = () => {
     "Latest Announcements",
     "Get Answers to Recurring Questions",
     "Academic Resource Sharing",
+    "Streamlined Academic Conversations",
+    "Seamless Course Updates and Information",
+    "Focused Learning Environment",
+    "Enhanced Learning Experience",
+    "Efficient Communication Hub",
+    "Collaborative Study Space",
+    "In-Depth Subject Discussions",
+    "Instant Access to Important Updates",
+    "Structured Academic Q&A",
+    "Resourceful Knowledge Exchange",
+    "Interactive Departmental Forum",
+    "Optimized for Serious Study",
+    "Swift Resolution of Doubts",
+    "Empowering Student Community",
   ]
   return (
     <div className="fixed h-screen w-screen ani-blob">
