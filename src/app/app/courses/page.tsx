@@ -1,8 +1,12 @@
+"use client"
+
 const CoursesPage = () => {
+
     return (
-        <>
-            <h1 className="mt-[1000px]">Courses</h1>
-        </>
+        <div className="container">
+            <h1 className="header">Courses</h1>
+            <p className="description">You will find all the courses you need!</p>
+        </div>
     );
 }
 
