@@ -18,6 +18,15 @@ const CoursesPage = () => {
         { name: 'HUM114', enrolled: false },
     ]);
 
+    const handleToggleEnrollment = (courseName) => {
+        setCourseData(prevData => prevData.map(course => {
+            if (course.name === courseName) {
+                return { ...course, enrolled: !course.enrolled };
+            }
+            return course;
+        }));
+    };
+
 
     return (
         <div className="container">
@@ -42,3 +51,5 @@ const CoursesPage = () => {
         </div>
     );
 }
+
+export default CoursesPage;
