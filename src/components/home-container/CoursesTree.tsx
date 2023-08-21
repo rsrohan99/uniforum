@@ -31,7 +31,7 @@ const CoursesTree = () => {
                     courses.departments[department].map((course, index) => {
                       return (
                         <div key={index} className="flex flex-row items-center justify-between w-full px-2 py-2 text-sm font-medium text-gray-500 bg-white rounded-b-xl hover:bg-gray-100 mr-10">
-                          <span>{course}</span>
+                          <span className="pl-5">{course}</span>
                         </div>
                       )
                     })

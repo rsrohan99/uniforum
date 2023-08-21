@@ -2,7 +2,7 @@
 const ProfilePage = () => {
   return (
     <>
-      ProfilePage. 
+      profile page
     </>
   )
 };
