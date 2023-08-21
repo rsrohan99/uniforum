@@ -6,10 +6,16 @@ import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import {useRouter} from "next/navigation";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
 import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,} from "~/components/ui/alert-dialog"
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover"
 import {showErrorToast} from "~/components/posts/Compose";
 import toast from "react-hot-toast";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 import NProgress from "nprogress";
+import ShareButtom from "~/components/posts/ShareButtom";
 
 function timeAgo(timestamp: string): string {
   const currentDate = new Date();
@@ -182,10 +188,17 @@ const Post: React.FC<PostProps> = ({
           <MessageCircle size={18} />
           <p className="ml-2">{post.replies} replies</p>
         </div>
-        <div className="flex items-center">
-          <Share2 size={18} />
-          <p className="ml-2">Share</p>
-        </div>
+          <Popover>
+            <PopoverTrigger>
+              <div className="flex items-center hover:text-accent2">
+                <Share2 size={18} />
+                <p className="ml-2">Share</p>
+              </div>
+            </PopoverTrigger>
+            <PopoverContent className="w-full text-muted-foreground">
+              <ShareButtom link={`${location.href}/app/posts/${post.id}`}/>
+            </PopoverContent>
+          </Popover>
         <div className="flex items-center">
           <Download size={18} />
           <p className="ml-2">Save</p>
