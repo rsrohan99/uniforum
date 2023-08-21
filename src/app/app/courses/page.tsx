@@ -1,4 +1,5 @@
 import { useState } from "react";
+import './CoursesPage.css'
 
 const CoursesPage = () => {
     const [courseData, setCourseData] = useState([
