@@ -3,9 +3,15 @@ const ProfilePage = () => {
   return (
     <>
       <form className="mt-10">
-        <label className="m">
+        <label>
+          Update Profile Picture:
+          <input type="file" accept="image/*" className="rounded-md ml-5" />
+        </label>
+        <br />
+        <br />
+        <label className="">
           Set Bio:
-          <input className="ml-10 w-96 h-10 rounded-md" type="text" name="bio" />
+          <input className="ml-12 w-96 h-10 rounded-md" type="text" name="bio" />
         </label>
         <br /> <br />
         <label>
