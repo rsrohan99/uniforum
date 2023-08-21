@@ -10,9 +10,11 @@ import { usePostsHook } from "~/hooks/usePosts";
 import {useSearchQueryHook} from "~/hooks/useSearchQuery";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 import {usePostsLoading} from "~/hooks/usePostsLoading";
-import {usePathname, useRouter} from "next/navigation";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import NProgress from "nprogress";
 import toast from "react-hot-toast";
+import search from "~/components/navbar/Search";
+import {useBookmarks} from "~/hooks/useBookmarks";
 
 const PostsContainer = () => {
 
@@ -28,6 +30,7 @@ const PostsContainer = () => {
   const { coursesFilters, getLatestCoursesFilters, setCoursesFilters } = useCoursesFilters();
   const session = useSession()
   const pathname = usePathname()
+  const {isBookmarks, getLatestBookmarks} = useBookmarks()
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -67,6 +70,28 @@ const PostsContainer = () => {
       if (pathname !== '/app') return
       const getPosts = async () => {
         setPostsLoading(true)
+        if (getLatestBookmarks()) {
+          const { data: posts, error: posts_error } = await clientSupabase
+            .from('bookmarks')
+            .select(`post_id(
+              id,
+              user: user_id(user_id, username, profile_pic),
+              title,
+              date_posted,
+              subtitle,
+              post_type,
+              university,
+              department,
+              course
+            )`)
+            .eq('user_id', session?.user.id)
+            .order('date_bookmarked', { ascending: false })
+          if (posts_error) throw posts_error;
+          // console.log(posts)
+          setPosts(posts.map(value=>value.post_id))
+          setPostsLoading(false)
+          return
+        }
         let queryBuilder = clientSupabase
           .from('posts')
           .select(`
@@ -99,7 +124,7 @@ const PostsContainer = () => {
       }
       getPosts();
     };
-  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh]);
+  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks]);
 
 
   return (

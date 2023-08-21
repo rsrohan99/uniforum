@@ -22,6 +22,7 @@ import {useSession, useSupabase} from "~/providers/supabase-provider";
 import toast from "react-hot-toast";
 import NProgress from "nprogress";
 import {useSignedIn} from "~/hooks/useSignedIn";
+import {useBookmarks} from "~/hooks/useBookmarks";
 
 
 const UserMenu = () => {
@@ -30,6 +31,7 @@ const UserMenu = () => {
   const currentSession = useSession()
   const defaultAvatarUrl = '/images/placeholder.jpg'
   const {setSignedIn} = useSignedIn()
+  const {setBookmarks} = useBookmarks()
   // const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl)
 
   // useEffect(() => {
@@ -82,7 +84,9 @@ const UserMenu = () => {
             <DropdownMenuItem onClick={() => router.push('/app/profile')}>
               Profile
             </DropdownMenuItem>
-            <DropdownMenuItem>
+            <DropdownMenuItem onClick={() => {
+              setBookmarks(true)
+            }}>
               Bookmarks
             </DropdownMenuItem>
             <DropdownMenuItem>
