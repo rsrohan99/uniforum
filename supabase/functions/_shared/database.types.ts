@@ -9,6 +9,80 @@ export type Json =
 export interface Database {
   public: {
     Tables: {
+      bookmarks: {
+        Row: {
+          bookmark_id: string
+          date_bookmarked: string
+          post_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bookmark_id?: string
+          date_bookmarked?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bookmark_id?: string
+          date_bookmarked?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookmarks_post_id_fkey"
+            columns: ["post_id"]
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookmarks_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "uni_users"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
+      comments: {
+        Row: {
+          best_answer: boolean | null
+          comment_content: string
+          comment_id: string
+          date_commented: string
+          post_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          best_answer?: boolean | null
+          comment_content: string
+          comment_id?: string
+          date_commented?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          best_answer?: boolean | null
+          comment_content?: string
+          comment_id?: string
+          date_commented?: string
+          post_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "comments_post_id_fkey"
+            columns: ["post_id"]
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "comments_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "uni_users"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
       courses: {
         Row: {
           department: string | null
@@ -175,8 +249,46 @@ export interface Database {
           }
         ]
       }
+      udvotes: {
+        Row: {
+          date_liked: string
+          post_id: string | null
+          user_id: string | null
+          vote_id: string
+          vote_value: number | null
+        }
+        Insert: {
+          date_liked?: string
+          post_id?: string | null
+          user_id?: string | null
+          vote_id?: string
+          vote_value?: number | null
+        }
+        Update: {
+          date_liked?: string
+          post_id?: string | null
+          user_id?: string | null
+          vote_id?: string
+          vote_value?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "udvotes_post_id_fkey"
+            columns: ["post_id"]
+            referencedRelation: "posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "udvotes_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "uni_users"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
       uni_users: {
         Row: {
+          Address: string | null
           bio: string | null
           email: string | null
           full_name: string | null
@@ -189,6 +301,7 @@ export interface Database {
           username: string | null
         }
         Insert: {
+          Address?: string | null
           bio?: string | null
           email?: string | null
           full_name?: string | null
@@ -201,6 +314,7 @@ export interface Database {
           username?: string | null
         }
         Update: {
+          Address?: string | null
           bio?: string | null
           email?: string | null
           full_name?: string | null
@@ -260,6 +374,17 @@ export interface Database {
           "": unknown
         }
         Returns: unknown
+      }
+      search: {
+        Args: {
+          query_embedding: string
+          match_threshold: number
+          match_count: number
+        }
+        Returns: {
+          id: string
+          similarity: number
+        }[]
       }
       vector_avg: {
         Args: {

@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
 import NProgress from "nprogress";
 import ShareButtom from "~/components/posts/ShareButtom";
+import {useBookmarks} from "~/hooks/useBookmarks";
 
 function timeAgo(timestamp: string): string {
   const currentDate = new Date();
@@ -93,6 +94,7 @@ const Post: React.FC<PostProps> = ({
   const session = useSession();
   const supabase = useSupabase();
   const {toggleTriggerPostRefresh} = useTriggerPostRefresh()
+  const {getLatestBookmarks} = useBookmarks()
 
   const deletePost = async () => {
     toast.loading("Deleting the post", {position: "bottom-right", id: 'deleting'})
@@ -108,6 +110,27 @@ const Post: React.FC<PostProps> = ({
       toggleTriggerPostRefresh();
     }
 
+  }
+
+  const saveBookmark = async (id: string) => {
+    const {error} = await supabase
+      .from('bookmarks')
+      .insert({
+        user_id: session?.user.id,
+        post_id: id
+      })
+    if (error) {
+      if (error.message.includes("duplicate key value")) {
+        await supabase
+          .from('bookmarks')
+          .delete()
+          .eq('user_id', session?.user.id)
+          .eq('post_id', id)
+      }
+      toast.success("Removed bookmark.", {position: "bottom-right"})
+    } else
+    toast.success("Saved as bookmark.", {position: "bottom-right"})
+    if (getLatestBookmarks()) toggleTriggerPostRefresh()
   }
 
   const goToPostPage = () => {
@@ -199,14 +222,16 @@ const Post: React.FC<PostProps> = ({
               <ShareButtom link={`${location.href}/app/posts/${post.id}`}/>
             </PopoverContent>
           </Popover>
-        <div className="flex items-center">
+        <div className="flex items-center hover:text-accent2 cursor-pointer"
+             onClick={async () => await saveBookmark(post.id)}
+        >
           <Download size={18} />
           <p className="ml-2">Save</p>
         </div>
-        <div className="flex items-center">
-          <Flag size={18} />
-          <p className="ml-2">Report</p>
-        </div>
+        {/*<div className="flex items-center">*/}
+        {/*  <Flag size={18} />*/}
+        {/*  <p className="ml-2">Report</p>*/}
+        {/*</div>*/}
       </div>
     </div>
   );

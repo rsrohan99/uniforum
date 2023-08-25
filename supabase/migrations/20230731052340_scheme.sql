@@ -1,10 +1,10 @@
 CREATE EXTENSION IF NOT EXISTS "vector";
 
 
-drop table if exists messages;
-drop table if exists conversations;
+-- drop table if exists messages;
+-- drop table if exists conversations;
 drop table if exists comments;
-drop table if exists shares;
+-- drop table if exists shares;
 drop table if exists udvotes;
 drop table if exists bookmarks;
 -- drop table if exists post_hierarchy;
@@ -116,6 +116,76 @@ create policy "users can update their posts" on posts
 create policy "users can delete their posts" on posts
   for delete using(auth.uid() = user_id);
 
+-- Bookmarks table
+CREATE TABLE bookmarks
+(
+    bookmark_id     uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id         uuid REFERENCES uni_users (user_id) on delete cascade,
+    post_id       uuid REFERENCES posts (id) on delete cascade,
+    date_bookmarked TIMESTAMPTZ NOT NULL default now(),
+    unique (user_id, post_id)
+);
+alter table bookmarks enable row level security;
+
+create policy "Only logged in user can see bookmark" on bookmarks
+  for select using (auth.uid() = user_id);
+create policy "only users can bookmark" on bookmarks
+  for insert with check (auth.uid() = user_id);
+create policy "only users can remove bookmark" on bookmarks
+  for delete using(auth.uid() = user_id);
+--
+-- -- Likes table
+CREATE TABLE udvotes
+(
+    vote_id     uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id         uuid REFERENCES uni_users (user_id) on delete cascade,
+    post_id       uuid REFERENCES posts (id) on delete cascade,
+    vote_value    int2 default 0,
+    date_liked TIMESTAMPTZ NOT NULL default now(),
+    unique (user_id, post_id)
+);
+alter table udvotes enable row level security;
+
+create policy "Only logged in user can see likes" on udvotes
+  for select using (auth.uid() = user_id);
+create policy "only users can vote" on udvotes
+  for insert with check (auth.uid() = user_id);
+create policy "only users can update vote" on udvotes
+  for update using(auth.uid() = user_id);
+create policy "only users can unvote" on udvotes
+  for delete using(auth.uid() = user_id);
+--
+-- -- Re-shares table
+-- CREATE TABLE shares
+-- (
+--     share_id    uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+--     user_id     uuid REFERENCES prompt_users (user_id) on delete cascade,
+--     prompt_id   uuid REFERENCES prompts (prompt_id) on delete cascade,
+--     date_shared TIMESTAMPTZ NOT NULL default now()
+-- );
+-- alter table shares enable row level security;
+--
+--
+-- Comments table
+CREATE TABLE comments
+(
+    comment_id        uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id           uuid REFERENCES uni_users (user_id) on delete cascade,
+    post_id         uuid REFERENCES posts (id) on delete cascade,
+--     parent_comment_id uuid REFERENCES comments (comment_id) on delete cascade,
+    comment_content   TEXT        NOT NULL,
+    date_commented    TIMESTAMPTZ NOT NULL default now(),
+--     is_edited         BOOLEAN,
+    best_answer       BOOLEAN default false
+);
+alter table comments enable row level security;
+
+create policy "Only logged in user can see comments" on comments
+  for select using (auth.uid() = user_id);
+create policy "only users can comment" on comments
+  for insert with check (auth.uid() = user_id);
+create policy "only users can comment" on comments
+  for delete using(auth.uid() = user_id);
 -- drop table if exists post_hierarchy;
 -- create table post_hierarchy
 -- (
