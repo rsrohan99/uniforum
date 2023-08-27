@@ -57,7 +57,9 @@ export default function PostPage({ params }: { params: { id: string } }) {
           <div className='mb-2'>
             <Post {...post}/>
           </div>
-          <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'preview'} value={post.content}/>
+          {(post.post_type==='Discussion' || post.post_type==="Q&A") && (
+            <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'preview'} value={post.content}/>
+          )}
         </>
       )}
     </div>

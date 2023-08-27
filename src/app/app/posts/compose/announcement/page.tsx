@@ -108,7 +108,7 @@ function ComposePage() {
           )}
         </div>
       </div>
-      <Compose post_type={'Discussion'} uni={selectedUni} course={selectedCourse} department={selectedDepartment}/>
+      <Compose post_type={'Announcement'} uni={selectedUni} course={selectedCourse} department={selectedDepartment}/>
     </>
   );
 }

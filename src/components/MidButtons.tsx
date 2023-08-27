@@ -81,10 +81,16 @@ const MidButtons = () => {
               }}>
                 Discussion
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                NProgress.start()
+                router.push('/app/posts/compose/announcement')
+              }}>
                 Announcement
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                NProgress.start()
+                router.push('/app/posts/compose/qna')
+              }}>
                 Q&A
               </DropdownMenuItem>
               <DropdownMenuItem>
