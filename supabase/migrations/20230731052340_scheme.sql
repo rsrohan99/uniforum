@@ -100,6 +100,7 @@ create table posts
 --   hierarchy text,
   embedding vector(1536),
   content text,
+  votes_count INT default 0,
   date_posted           TIMESTAMPTZ default now(),
   post_type text REFERENCES post_types (name) on delete cascade on update cascade,
   course text REFERENCES courses (id) on delete cascade on update cascade,
