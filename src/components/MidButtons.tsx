@@ -7,10 +7,20 @@ import {ChevronDown, PenLine} from "lucide-react";
 import {useRouter} from "next/navigation";
 import NProgress from "nprogress";
 import {usePostSorting} from "~/hooks/usePostSorting";
+import {usePostRange, RangeOptions} from "~/hooks/usePostRange";
+
+const RANGES = {
+  'all_time': 'All Time',
+  'today': 'Today',
+  'this_week': 'This Week',
+  'this_month': 'This Month',
+  'this_year': 'This Year',
+}
 
 const MidButtons = () => {
   const router = useRouter()
   const {setSortOrder, getLatestSortOrder} = usePostSorting()
+  const {setRange, getLatestRange} = usePostRange()
   return (
     <>
       <div className="mx-auto flex w-10/12 flex-wrap items-center justify-between gap-4 pt-20 md:pt-24 lg:w-7/12 lg:flex-nowrap">
@@ -27,27 +37,17 @@ const MidButtons = () => {
             <DropdownMenuTrigger asChild>
               <Button
                 className="px-7 h-8 rounded-xl bg-white hover:bg-accent2 hover:text-white tracking-wider font-bold focus-visible:ring-0 focus-visible:ring-offset-0 text-gray-500"
-              >Today <span
+              >{RANGES[getLatestRange()]}<span
                 className="
                   ml-2 mt-1
               "><ChevronDown size={18}/></span></Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent className="w-20 rounded-xl font-medium text-muted-foreground" align="start" forceMount>
-                <DropdownMenuItem>
-                  Today
+              {Object.keys(RANGES).map(range => (
+                <DropdownMenuItem key={range} onClick={() => {setRange(range as RangeOptions)}}>
+                  {RANGES[range]}
                 </DropdownMenuItem>
-                <DropdownMenuItem>
-                  This week
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  This month
-                </DropdownMenuItem>
-                <DropdownMenuItem>
-                  This year
-                </DropdownMenuItem>
-              <DropdownMenuItem>
-                All time
-              </DropdownMenuItem>
+              ))}
             </DropdownMenuContent>
           </DropdownMenu>
         </div>

@@ -15,6 +15,7 @@ import NProgress from "nprogress";
 import toast from "react-hot-toast";
 import {useBookmarks} from "~/hooks/useBookmarks";
 import {usePostSorting} from "~/hooks/usePostSorting";
+import {usePostRange} from "~/hooks/usePostRange";
 
 const PostsContainer = () => {
 
@@ -32,6 +33,7 @@ const PostsContainer = () => {
   const pathname = usePathname()
   const {isBookmarks, getLatestBookmarks} = useBookmarks()
   const {sortOrder, getLatestSortOrder} = usePostSorting()
+  const {postRange, getLatestRange} = usePostRange()
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -120,6 +122,34 @@ const PostsContainer = () => {
         if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
         else if (getLatestSortOrder() === "top") queryBuilder = queryBuilder.order('votes_count', { ascending: false })
 
+        const latestRange = getLatestRange()
+        if (latestRange === "today") {
+          const today = new Date()
+          today.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', today.toISOString())
+        }
+        else if (latestRange === "this_week") {
+          const startOfLastWeek = new Date();
+          startOfLastWeek.setDate(startOfLastWeek.getDate() - startOfLastWeek.getDay() - 6);
+          startOfLastWeek.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', startOfLastWeek.toISOString())
+        }
+        else if (latestRange === "this_month") {
+          const startOfLastMonth = new Date();
+          startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1);
+          startOfLastMonth.setDate(1);
+          startOfLastMonth.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', startOfLastMonth.toISOString())
+        }
+        else if (latestRange === "this_year") {
+          const startOfLastYear = new Date();
+          startOfLastYear.setFullYear(startOfLastYear.getFullYear() - 1);
+          startOfLastYear.setMonth(0);
+          startOfLastYear.setDate(1);
+          startOfLastYear.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', startOfLastYear.toISOString())
+        }
+
         const { data: posts, error: posts_error } = await queryBuilder
         if (posts_error) throw posts_error;
         // console.log(posts)
@@ -129,7 +159,7 @@ const PostsContainer = () => {
       }
       getPosts();
     };
-  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks, sortOrder]);
+  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks, sortOrder, postRange]);
 
 
   return (
