@@ -91,6 +91,7 @@ const PostsContainer = () => {
           // console.log(posts)
           setPosts(posts.map(value=>value.post_id))
           setPostsLoading(false)
+          NProgress.done()
           return
         }
         let queryBuilder = clientSupabase
@@ -124,6 +125,7 @@ const PostsContainer = () => {
         // console.log(posts)
         setPosts(posts)
         setPostsLoading(false)
+        NProgress.done()
       }
       getPosts();
     };

@@ -101,9 +101,11 @@ const Post: React.FC<PostProps> = ({
   const [repliesCount, setRepliesCount] = useState(0)
 
   const [updateVotesReplies, setUpdateVotesReplies] = useState(false)
+  const [updateSaveStatus, setUpdateSaveStatus] = useState(false)
 
   const [isUpvoted, setIsUpvoted] = useState(false)
   const [isDownvoted, setIsDownvoted] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -148,6 +150,23 @@ const Post: React.FC<PostProps> = ({
     };
   }, [updateVotesReplies]);
 
+  useEffect(() => {
+    return () => {
+      const getSaveStatus = async () => {
+        const {data} = await supabase
+          .from('bookmarks')
+          .select('bookmark_id')
+          .eq('user_id', session?.user.id)
+          .eq('post_id', post.id)
+        if (data && data.length >= 1) {
+          setIsSaved(true)
+        } else setIsSaved(false)
+      }
+      getSaveStatus();
+    };
+  }, [updateSaveStatus]);
+
+
   const deletePost = async () => {
     toast.loading("Deleting the post", {position: "bottom-right", id: 'deleting'})
     const {error} = await supabase
@@ -182,6 +201,7 @@ const Post: React.FC<PostProps> = ({
       toast.success("Removed bookmark.", {position: "bottom-right"})
     } else
     toast.success("Saved as bookmark.", {position: "bottom-right"})
+    setUpdateSaveStatus(!updateSaveStatus)
     if (getLatestBookmarks()) toggleTriggerPostRefresh()
   }
 
@@ -214,6 +234,7 @@ const Post: React.FC<PostProps> = ({
         // setVotesCount(0)
       }
     }
+    toast.success("Updated Vote", {position: "bottom-right"})
     setUpdateVotesReplies(!updateVotesReplies);
   }
 
@@ -301,11 +322,11 @@ const Post: React.FC<PostProps> = ({
               <ShareButtom link={`${location.href}/app/posts/${post.id}`}/>
             </PopoverContent>
           </Popover>
-        <div className="flex items-center hover:text-accent2 cursor-pointer"
+        <div className={`flex items-center hover:text-accent2 cursor-pointer ${isSaved?"text-accent2": "text-muted-foreground"}`}
              onClick={async () => await saveBookmark(post.id)}
         >
           <Download size={18} />
-          <p className="ml-2">Save</p>
+          <p className="ml-2">Save{isSaved?"d":""}</p>
         </div>
         {/*<div className="flex items-center">*/}
         {/*  <Flag size={18} />*/}
