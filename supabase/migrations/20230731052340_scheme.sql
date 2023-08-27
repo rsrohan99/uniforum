@@ -147,8 +147,8 @@ CREATE TABLE udvotes
 );
 alter table udvotes enable row level security;
 
-create policy "Only logged in user can see likes" on udvotes
-  for select using (auth.uid() = user_id);
+create policy "All users can see likes" on udvotes
+  for select using (true);
 create policy "only users can vote" on udvotes
   for insert with check (auth.uid() = user_id);
 create policy "only users can update vote" on udvotes

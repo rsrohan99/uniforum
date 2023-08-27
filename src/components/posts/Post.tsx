@@ -82,6 +82,11 @@ export interface PostProps {
 const Post: React.FC<PostProps> = ({
   ...post
 }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, [])
+
   const router = useRouter()
   let h_dept, h_course;
   if (post.department?.includes('_all_~')) h_dept = ''
@@ -148,7 +153,7 @@ const Post: React.FC<PostProps> = ({
       }
       getVotesReplies();
     };
-  }, [updateVotesReplies]);
+  }, [updateVotesReplies, hasMounted]);
 
   useEffect(() => {
     return () => {
@@ -164,7 +169,7 @@ const Post: React.FC<PostProps> = ({
       }
       getSaveStatus();
     };
-  }, [updateSaveStatus]);
+  }, [updateSaveStatus, hasMounted]);
 
 
   const deletePost = async () => {
@@ -304,7 +309,7 @@ const Post: React.FC<PostProps> = ({
       <div className="mt-7 flex flex-wrap gap-3 items-center justify-between text-xs font-semibold text-slate-500">
         <div className="flex items-center rounded-3xl px-6 py-2 bg-background">
           <ChevronUp onClick={async () => await vote(1)} size={18} className={`${isUpvoted? "text-accent2": "text-slate-500"} cursor-pointer`} />
-          <p className="ml-4 text-accent2">{votesCount || ""}</p>
+          <p className="ml-4 text-accent2">{votesCount || "0"}</p>
           <ChevronDown onClick={async () => await vote(-1)} size={18} className={`ml-4 ${isDownvoted? "text-accent2": "text-slate-500" } cursor-pointer`} />
         </div>
         <div className="flex items-center">
