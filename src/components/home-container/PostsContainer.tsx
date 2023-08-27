@@ -13,8 +13,8 @@ import {usePostsLoading} from "~/hooks/usePostsLoading";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import NProgress from "nprogress";
 import toast from "react-hot-toast";
-import search from "~/components/navbar/Search";
 import {useBookmarks} from "~/hooks/useBookmarks";
+import {usePostSorting} from "~/hooks/usePostSorting";
 
 const PostsContainer = () => {
 
@@ -31,6 +31,7 @@ const PostsContainer = () => {
   const session = useSession()
   const pathname = usePathname()
   const {isBookmarks, getLatestBookmarks} = useBookmarks()
+  const {sortOrder, getLatestSortOrder} = usePostSorting()
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -115,8 +116,10 @@ const PostsContainer = () => {
         if (filteredCourses.length > 0) queryBuilder = queryBuilder.in('course', filteredCourses)
         if (getLatestQuery() || searchPostIds.length > 0) queryBuilder = queryBuilder.in('id', searchPostIds)
 
+        if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
+        else if (getLatestSortOrder() === "top") queryBuilder = queryBuilder.order('votes_count', { ascending: false })
+
         const { data: posts, error: posts_error } = await queryBuilder
-          .order('date_posted', { ascending: false })
         if (posts_error) throw posts_error;
         // console.log(posts)
         setPosts(posts)
@@ -124,7 +127,7 @@ const PostsContainer = () => {
       }
       getPosts();
     };
-  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks]);
+  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks, sortOrder]);
 
 
   return (
