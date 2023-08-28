@@ -181,8 +181,8 @@ CREATE TABLE comments
 );
 alter table comments enable row level security;
 
-create policy "Only logged in user can see comments" on comments
-  for select using (auth.uid() = user_id);
+create policy "Everyone can see comments" on comments
+  for select using (true);
 create policy "only users can comment" on comments
   for insert with check (auth.uid() = user_id);
 create policy "only users can comment" on comments

@@ -18,7 +18,7 @@ import NProgress from "nprogress";
 import ShareButtom from "~/components/posts/ShareButtom";
 import {useBookmarks} from "~/hooks/useBookmarks";
 
-function timeAgo(timestamp: string): string {
+export function timeAgo(timestamp: string): string {
   const currentDate = new Date();
   const targetDate = new Date(timestamp);
 
@@ -26,7 +26,7 @@ function timeAgo(timestamp: string): string {
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
 
   if (elapsedSeconds < 60) {
-    return `${elapsedSeconds} second${elapsedSeconds === 1 ? '' : 's'} ago`;
+    return `${Math.max(elapsedSeconds, 1)} second${elapsedSeconds === 1 ? '' : 's'} ago`;
   }
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60);
@@ -314,7 +314,7 @@ const Post: React.FC<PostProps> = ({
         </div>
         <div className="flex items-center">
           <MessageCircle size={18} />
-          <p className="ml-2">{repliesCount} replies</p>
+          <p className="ml-2">{repliesCount} {repliesCount>1?"replies": "reply"}</p>
         </div>
           <Popover>
             <PopoverTrigger>
