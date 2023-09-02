@@ -31,7 +31,7 @@ const UserMenu = () => {
   const currentSession = useSession()
   const defaultAvatarUrl = '/images/placeholder.jpg'
   const {setSignedIn} = useSignedIn()
-  const {setBookmarks} = useBookmarks()
+  const {setBookmarks, getLatestBookmarks} = useBookmarks()
   // const [avatarUrl, setAvatarUrl] = useState(defaultAvatarUrl)
 
   // useEffect(() => {
@@ -85,7 +85,8 @@ const UserMenu = () => {
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => {
-              setBookmarks(true)
+              setBookmarks(!getLatestBookmarks())
+              NProgress.start()
             }}>
               Bookmarks
             </DropdownMenuItem>

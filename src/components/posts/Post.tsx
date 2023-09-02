@@ -1,6 +1,6 @@
 'use client'
 
-import React from "react";
+import React, {useEffect, useState} from "react";
 import {ChevronDown, ChevronUp, Download, Flag, MessageCircle, Share2, Trash} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import {useRouter} from "next/navigation";
@@ -18,7 +18,7 @@ import NProgress from "nprogress";
 import ShareButtom from "~/components/posts/ShareButtom";
 import {useBookmarks} from "~/hooks/useBookmarks";
 
-function timeAgo(timestamp: string): string {
+export function timeAgo(timestamp: string): string {
   const currentDate = new Date();
   const targetDate = new Date(timestamp);
 
@@ -26,7 +26,7 @@ function timeAgo(timestamp: string): string {
   const elapsedSeconds = Math.floor(elapsedMilliseconds / 1000);
 
   if (elapsedSeconds < 60) {
-    return `${elapsedSeconds} second${elapsedSeconds === 1 ? '' : 's'} ago`;
+    return `${Math.max(elapsedSeconds, 1)} second${elapsedSeconds === 1 ? '' : 's'} ago`;
   }
 
   const elapsedMinutes = Math.floor(elapsedSeconds / 60);
@@ -78,9 +78,15 @@ export interface PostProps {
   // }
 }
 
+
 const Post: React.FC<PostProps> = ({
   ...post
 }) => {
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, [])
+
   const router = useRouter()
   let h_dept, h_course;
   if (post.department?.includes('_all_~')) h_dept = ''
@@ -95,6 +101,76 @@ const Post: React.FC<PostProps> = ({
   const supabase = useSupabase();
   const {toggleTriggerPostRefresh} = useTriggerPostRefresh()
   const {getLatestBookmarks} = useBookmarks()
+
+  const [votesCount, setVotesCount] = useState(0)
+  const [repliesCount, setRepliesCount] = useState(0)
+
+  const [updateVotesReplies, setUpdateVotesReplies] = useState(false)
+  const [updateSaveStatus, setUpdateSaveStatus] = useState(false)
+
+  const [isUpvoted, setIsUpvoted] = useState(false)
+  const [isDownvoted, setIsDownvoted] = useState(false)
+  const [isSaved, setIsSaved] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      const getVotesReplies = async () => {
+        const getVotesPromise = supabase
+          .from('udvotes')
+          .select('vote_value')
+          .eq('post_id', post.id)
+
+        const getRepliesPromise = supabase
+          .from('comments')
+          .select('*', {count: 'exact'})
+          .eq('post_id', post.id)
+
+        const getUserVotePromise = supabase
+          .from('udvotes')
+          .select('vote_value')
+          .eq('user_id', session?.user.id)
+          .eq('post_id', post.id)
+
+        const {data: userVote} = await getUserVotePromise
+        if (userVote && userVote.length >= 1) {
+          setIsUpvoted(userVote[0].vote_value === 1)
+          setIsDownvoted(userVote[0].vote_value === -1)
+        } else {
+          setIsUpvoted(false)
+          setIsDownvoted(false)
+        }
+
+        const {data: votes} = await getVotesPromise
+        let total_votes = 0
+        if (votes && votes.length >= 1) {
+          for (let i = 0; i < votes.length; i++) {
+            total_votes += votes[i].vote_value;
+          }
+        }
+        setVotesCount(total_votes)
+        const {count: repCount} = await getRepliesPromise
+        setRepliesCount(repCount || 0);
+      }
+      getVotesReplies();
+    };
+  }, [updateVotesReplies, hasMounted]);
+
+  useEffect(() => {
+    return () => {
+      const getSaveStatus = async () => {
+        const {data} = await supabase
+          .from('bookmarks')
+          .select('bookmark_id')
+          .eq('user_id', session?.user.id)
+          .eq('post_id', post.id)
+        if (data && data.length >= 1) {
+          setIsSaved(true)
+        } else setIsSaved(false)
+      }
+      getSaveStatus();
+    };
+  }, [updateSaveStatus, hasMounted]);
+
 
   const deletePost = async () => {
     toast.loading("Deleting the post", {position: "bottom-right", id: 'deleting'})
@@ -130,12 +206,41 @@ const Post: React.FC<PostProps> = ({
       toast.success("Removed bookmark.", {position: "bottom-right"})
     } else
     toast.success("Saved as bookmark.", {position: "bottom-right"})
+    setUpdateSaveStatus(!updateSaveStatus)
     if (getLatestBookmarks()) toggleTriggerPostRefresh()
   }
 
   const goToPostPage = () => {
     NProgress.start()
     router.push(`/app/posts/${post.id}`)
+  }
+
+  const vote = async (userVote: number) => {
+    const {error} = await supabase
+      .from('udvotes')
+      .insert({
+        user_id: session?.user.id,
+        post_id: post.id,
+        vote_value: userVote
+      })
+    if (error) {
+      if (error.message.includes("duplicate key value")) {
+        let updatePromise;
+
+        if ((isDownvoted && userVote === -1) || (isUpvoted && userVote === 1))
+          updatePromise = supabase.from('udvotes').delete()
+        else updatePromise = supabase.from('udvotes').update({
+          vote_value: userVote
+        })
+
+        await updatePromise
+          .eq('user_id', session?.user.id)
+          .eq('post_id', post.id)
+        // setVotesCount(0)
+      }
+    }
+    toast.success("Updated Vote", {position: "bottom-right"})
+    setUpdateVotesReplies(!updateVotesReplies);
   }
 
   return (
@@ -203,13 +308,13 @@ const Post: React.FC<PostProps> = ({
       </div>
       <div className="mt-7 flex flex-wrap gap-3 items-center justify-between text-xs font-semibold text-slate-500">
         <div className="flex items-center rounded-3xl px-6 py-2 bg-background">
-          <ChevronUp size={18} className="text-accent2" />
-          <p className="ml-4 text-accent2">{post.upvotes}</p>
-          <ChevronDown size={18} className="ml-4 text-slate-500" />
+          <ChevronUp onClick={async () => await vote(1)} size={18} className={`${isUpvoted? "text-accent2": "text-slate-500"} cursor-pointer`} />
+          <p className="ml-4 text-accent2">{votesCount || "0"}</p>
+          <ChevronDown onClick={async () => await vote(-1)} size={18} className={`ml-4 ${isDownvoted? "text-accent2": "text-slate-500" } cursor-pointer`} />
         </div>
         <div className="flex items-center">
           <MessageCircle size={18} />
-          <p className="ml-2">{post.replies} replies</p>
+          <p className="ml-2">{repliesCount} {repliesCount>1?"replies": "reply"}</p>
         </div>
           <Popover>
             <PopoverTrigger>
@@ -222,11 +327,11 @@ const Post: React.FC<PostProps> = ({
               <ShareButtom link={`${location.href}/app/posts/${post.id}`}/>
             </PopoverContent>
           </Popover>
-        <div className="flex items-center hover:text-accent2 cursor-pointer"
+        <div className={`flex items-center hover:text-accent2 cursor-pointer ${isSaved?"text-accent2": "text-muted-foreground"}`}
              onClick={async () => await saveBookmark(post.id)}
         >
           <Download size={18} />
-          <p className="ml-2">Save</p>
+          <p className="ml-2">Save{isSaved?"d":""}</p>
         </div>
         {/*<div className="flex items-center">*/}
         {/*  <Flag size={18} />*/}

@@ -46,7 +46,7 @@ export const codeComponent = ({ inline, children = [], className, ...props }) =>
 }
 
 interface ComposeProps {
-  type: string,
+  post_type: string,
   uni: string,
   course: string,
   department: string
@@ -66,7 +66,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
   const router = useRouter()
 
   const handlePost = async () => {
-    if (!title || !content) {
+    if (!title || !subtitle) {
       showErrorToast('Neither title nor the content of the post can be empty.')
       return
     }
@@ -86,7 +86,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
         uni: props.uni,
         department: props.department,
         course: props.course,
-        post_type:props.type
+        post_type:props.post_type
       }),
     })
 
@@ -106,7 +106,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
       <div className='mx-auto mb-10 w-10/12 rounded-3xl pt-7'>
         <div className="mx-auto mb-4 flex flex-row flex-wrap items-center justify-between gap-4">
           <h2 className="mt-7 ml-1 text-2xl font-bold tracking-wide text-muted-foreground">Compose Post</h2>
-          <h2 className="mt-2 h-8 rounded-xl bg-white px-7 font-bold tracking-wide text-gray-500 pt-[5px]">{props.type}</h2>
+          <h2 className="mt-2 h-8 rounded-xl bg-white px-7 font-bold tracking-wide text-gray-500 pt-[5px]">{props.post_type}</h2>
           <Button
             onClick={handlePost}
             className="
@@ -121,7 +121,7 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
               text-gray-500"
           ><span className="mr-2"><UploadIcon size={18}/></span>Post</Button>
         </div>
-        <div className='flex flex-row items-center justify-evenly gap-3'>
+        <div className={`flex flex-row items-center justify-evenly gap-3 flex-wrap ${(props.post_type === 'Discussion' || props.post_type === "Q&A")? "md:flex-nowrap": ""}`}>
           <Textarea
             className="my-4 h-1 rounded-xl bg-white text-lg font-semibold tracking-wide placeholder:text-gray-400 text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={'Post Title'} value={title} onChange={(e) => setTitle(e.target.value)}/>
@@ -129,7 +129,9 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
             className="my-4 h-1 rounded-xl bg-white pt-2 pl-3 font-semibold tracking-wide placeholder:text-gray-400 text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
             placeholder={'Post Summary'} value={subtitle} onChange={(e) => setSubtitle(e.target.value)}/>
         </div>
-        <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'live'} value={content} onChange={setContent} />
+        {(props.post_type === 'Discussion' || props.post_type === "Q&A") && (
+          <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'live'} value={content} onChange={setContent} />
+        )}
       </div>
     </div>
   );

@@ -13,8 +13,9 @@ import {usePostsLoading} from "~/hooks/usePostsLoading";
 import {usePathname, useRouter, useSearchParams} from "next/navigation";
 import NProgress from "nprogress";
 import toast from "react-hot-toast";
-import search from "~/components/navbar/Search";
 import {useBookmarks} from "~/hooks/useBookmarks";
+import {usePostSorting} from "~/hooks/usePostSorting";
+import {usePostRange} from "~/hooks/usePostRange";
 
 const PostsContainer = () => {
 
@@ -31,6 +32,8 @@ const PostsContainer = () => {
   const session = useSession()
   const pathname = usePathname()
   const {isBookmarks, getLatestBookmarks} = useBookmarks()
+  const {sortOrder, getLatestSortOrder} = usePostSorting()
+  const {postRange, getLatestRange} = usePostRange()
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -90,6 +93,7 @@ const PostsContainer = () => {
           // console.log(posts)
           setPosts(posts.map(value=>value.post_id))
           setPostsLoading(false)
+          NProgress.done()
           return
         }
         let queryBuilder = clientSupabase
@@ -115,16 +119,47 @@ const PostsContainer = () => {
         if (filteredCourses.length > 0) queryBuilder = queryBuilder.in('course', filteredCourses)
         if (getLatestQuery() || searchPostIds.length > 0) queryBuilder = queryBuilder.in('id', searchPostIds)
 
+        if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
+        else if (getLatestSortOrder() === "top") queryBuilder = queryBuilder.order('votes_count', { ascending: false })
+
+        const latestRange = getLatestRange()
+        if (latestRange === "today") {
+          const today = new Date()
+          today.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', today.toISOString())
+        }
+        else if (latestRange === "this_week") {
+          const startOfLastWeek = new Date();
+          startOfLastWeek.setDate(startOfLastWeek.getDate() - startOfLastWeek.getDay() - 6);
+          startOfLastWeek.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', startOfLastWeek.toISOString())
+        }
+        else if (latestRange === "this_month") {
+          const startOfLastMonth = new Date();
+          startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1);
+          startOfLastMonth.setDate(1);
+          startOfLastMonth.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', startOfLastMonth.toISOString())
+        }
+        else if (latestRange === "this_year") {
+          const startOfLastYear = new Date();
+          startOfLastYear.setFullYear(startOfLastYear.getFullYear() - 1);
+          startOfLastYear.setMonth(0);
+          startOfLastYear.setDate(1);
+          startOfLastYear.setHours(0,0,0,0)
+          queryBuilder = queryBuilder.gte('date_posted', startOfLastYear.toISOString())
+        }
+
         const { data: posts, error: posts_error } = await queryBuilder
-          .order('date_posted', { ascending: false })
         if (posts_error) throw posts_error;
         // console.log(posts)
         setPosts(posts)
         setPostsLoading(false)
+        NProgress.done()
       }
       getPosts();
     };
-  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks]);
+  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks, sortOrder, postRange]);
 
 
   return (

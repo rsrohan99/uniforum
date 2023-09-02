@@ -100,6 +100,7 @@ create table posts
 --   hierarchy text,
   embedding vector(1536),
   content text,
+  votes_count INT default 0,
   date_posted           TIMESTAMPTZ default now(),
   post_type text REFERENCES post_types (name) on delete cascade on update cascade,
   course text REFERENCES courses (id) on delete cascade on update cascade,
@@ -146,8 +147,8 @@ CREATE TABLE udvotes
 );
 alter table udvotes enable row level security;
 
-create policy "Only logged in user can see likes" on udvotes
-  for select using (auth.uid() = user_id);
+create policy "All users can see likes" on udvotes
+  for select using (true);
 create policy "only users can vote" on udvotes
   for insert with check (auth.uid() = user_id);
 create policy "only users can update vote" on udvotes
@@ -180,8 +181,8 @@ CREATE TABLE comments
 );
 alter table comments enable row level security;
 
-create policy "Only logged in user can see comments" on comments
-  for select using (auth.uid() = user_id);
+create policy "Everyone can see comments" on comments
+  for select using (true);
 create policy "only users can comment" on comments
   for insert with check (auth.uid() = user_id);
 create policy "only users can comment" on comments

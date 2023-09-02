@@ -68,6 +68,31 @@ as $$
   limit match_count;
 $$;
 
+drop trigger if exists on_update_vote on udvotes;
+drop function if exists update_vote;
+-- Create the 'update_vote' trigger function
+CREATE OR REPLACE FUNCTION update_vote() RETURNS TRIGGER AS $$
+BEGIN
+    -- Update votes_count when a new row is inserted or an existing row is updated in udvotes
+    IF TG_OP = 'INSERT' OR TG_OP = 'UPDATE' THEN
+        UPDATE posts
+        SET votes_count = (SELECT SUM(vote_value) FROM udvotes WHERE post_id = NEW.post_id)
+        WHERE id = NEW.post_id;
+    -- Update votes_count when a row is deleted from udvotes
+    ELSIF TG_OP = 'DELETE' THEN
+        UPDATE posts
+        SET votes_count = (SELECT SUM(vote_value) FROM udvotes WHERE post_id = OLD.post_id)
+        WHERE id = OLD.post_id;
+    END IF;
+    RETURN NULL;
+END;
+$$ LANGUAGE plpgsql;
+
+-- Create the 'update_vote' trigger
+CREATE TRIGGER on_update_vote
+AFTER INSERT OR UPDATE OR DELETE ON udvotes
+FOR EACH ROW
+EXECUTE FUNCTION update_vote();
 
 DROP TRIGGER IF EXISTS on_auth_user_created on auth.users;
 drop function if exists public.handle_new_user;
