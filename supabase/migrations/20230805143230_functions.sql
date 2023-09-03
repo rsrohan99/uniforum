@@ -94,6 +94,51 @@ AFTER INSERT OR UPDATE OR DELETE ON udvotes
 FOR EACH ROW
 EXECUTE FUNCTION update_vote();
 
+drop trigger if exists tr_notify_announcement on posts;
+CREATE OR REPLACE FUNCTION notify_announcement()
+RETURNS TRIGGER AS
+$$
+BEGIN
+    IF NEW.post_type = 'Announcement' THEN
+        INSERT INTO notifications(user_id, content, link)
+        SELECT e.user_id,
+               'New announcement in ' || UPPER(REPLACE(NEW.course, '_all_~', '')),
+               NEW.id
+        FROM enrollments e
+        WHERE e.course = NEW.course;
+    END IF;
+    RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql security definer;
+
+CREATE TRIGGER tr_notify_announcement
+AFTER INSERT ON posts
+FOR EACH ROW
+EXECUTE FUNCTION notify_announcement();
+
+drop trigger if exists tr_notify_comment on comments;
+CREATE OR REPLACE FUNCTION notify_comment()
+RETURNS TRIGGER AS
+$$
+BEGIN
+    INSERT INTO notifications(user_id, content, link)
+    SELECT p.user_id,
+           '@' || (SELECT username FROM uni_users WHERE user_id = NEW.user_id) || ' commented on your post',
+           NEW.post_id
+    FROM posts p
+    WHERE p.id = NEW.post_id;
+
+    RETURN NEW;
+END;
+$$
+LANGUAGE plpgsql security definer;
+
+CREATE TRIGGER tr_notify_comment
+AFTER INSERT ON comments
+FOR EACH ROW
+EXECUTE FUNCTION notify_comment();
+
 DROP TRIGGER IF EXISTS on_auth_user_created on auth.users;
 drop function if exists public.handle_new_user;
 create or replace function public.handle_new_user()

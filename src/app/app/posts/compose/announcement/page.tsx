@@ -3,11 +3,14 @@
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "~/components/ui/dropdown-menu";
 import {Button} from "~/components/ui/button";
 import {ChevronDown} from "lucide-react";
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import Compose from "~/components/posts/Compose";
+import {useEnrolledCoursesHook} from "~/hooks/useEnrolledCourses";
+import {useSession, useSupabase} from "~/providers/supabase-provider";
+import {transformHierarchy} from "~/utils/getHierarchy";
 
 interface Department {
-  dept_name: string,
+  dept_id: string,
   courses: string[]
 }
 interface Hierarchy {
@@ -16,15 +19,48 @@ interface Hierarchy {
 }
 
 function ComposePage() {
-  const hierarchy_object: Hierarchy = {
-    uni: 'BUET',
-    departments: [
-      {
-        dept_name: 'CSE',
-        courses: ['CSE101', 'CSE201']
+  const [hasMounted, setHasMounted] = useState(false);
+  useEffect(() => {
+    setHasMounted(true);
+  }, [])
+
+  const {getLatestEnrolledCourses, setEnrolledCourses} = useEnrolledCoursesHook();
+  const supabase = useSupabase();
+  const session = useSession();
+
+  const [hierarchy, setHierarchy] = useState<Hierarchy>()
+
+  useEffect(() => {
+    return () => {
+      const getCourses = async () => {
+        const {data:enr_data} = await supabase
+          .from('enrollments')
+          .select('course')
+          .eq('user_id', session?.user.id)
+        const enrolledCoursesList = enr_data?.map(enr => (enr.course as string)) || []
+        setEnrolledCourses(enrolledCoursesList)
+        const {data} = await supabase
+          .from('courses')
+          .select('id, department(id)')
+          .in('id', getLatestEnrolledCourses())
+        // console.log(data)
+        // console.log(transformHierarchy(data))
+        setHierarchy(transformHierarchy(data))
       }
-    ]
-  }
+      getCourses()
+    };
+  }, [hasMounted]);
+
+
+  // const hierarchy: Hierarchy = {
+  //   uni: 'BUET',
+  //   departments: [
+  //     {
+  //       dept_id: 'CSE',
+  //       courses: ['CSE101', 'CSE201']
+  //     }
+  //   ]
+  // }
 
   const [selectedDepartment, setSelectedDepartment] = useState("")
   const [selectedUni, setSelectedUni] = useState("BUET")
@@ -66,11 +102,11 @@ function ComposePage() {
                   {'---'}
                 </DropdownMenuItem>
               )}
-              {hierarchy_object.departments.map(dept_obj => (
+              {hierarchy?.departments.map(dept_obj => (
                 <DropdownMenuItem
-                  onClick={() => setSelectedDepartment(dept_obj.dept_name)}
-                  key={dept_obj.dept_name}>
-                  {dept_obj.dept_name}
+                  onClick={() => setSelectedDepartment(dept_obj.dept_id)}
+                  key={dept_obj.dept_id}>
+                  {dept_obj.dept_id}
                 </DropdownMenuItem>
               ))}
             </DropdownMenuContent>
@@ -96,7 +132,7 @@ function ComposePage() {
               "><ChevronDown size={18}/></span></Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-20 rounded-xl font-medium text-muted-foreground" align="center" forceMount>
-                {hierarchy_object.departments.filter(dept_obj => dept_obj.dept_name === selectedDepartment)[0]?.courses.map(course => (
+                {hierarchy?.departments.filter(dept_obj => dept_obj.dept_id === selectedDepartment)[0]?.courses.filter(course => !course.toLowerCase().includes('_all_~')).map(course => (
                   <DropdownMenuItem
                     onClick={() => setSelectedCourse(course)}
                     key={course}>

@@ -38,7 +38,7 @@ const CoursesPage = () => {
         const {data} = await supabase
           .from('departments')
           .select('id, name, courses(id, name)')
-        console.log(data)
+        // console.log(data)
         setAllCourse(data as IDept[])
         const {data:enr_data} = await supabase
           .from('enrollments')
