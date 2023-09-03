@@ -208,6 +208,8 @@ create policy "only users can comment" on comments
   for insert with check (auth.uid() = user_id);
 create policy "only users can comment" on comments
   for delete using(auth.uid() = user_id);
+create policy "users can update their post replies" on comments
+  for update using(auth.uid() = (select user_id from posts where posts.id = post_id));
 -- drop table if exists post_hierarchy;
 -- create table post_hierarchy
 -- (

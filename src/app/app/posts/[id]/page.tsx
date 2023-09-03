@@ -67,12 +67,13 @@ export default function PostPage({ params }: { params: { id: string } }) {
           .select(`
             comment_id,
             user:user_id(user_id, username, profile_pic),
+            post_info:post_id(user_id, post_type, id),
             best_answer,
             comment_content,
             date_commented
           `)
           .eq('post_id', params.id)
-          .order('best_answer', { ascending: true })
+          .order('best_answer', { ascending: false })
           .order('date_commented', { ascending: false })
 
         setReplies(comments || null)
