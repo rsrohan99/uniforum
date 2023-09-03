@@ -7,6 +7,7 @@ drop table if exists comments;
 -- drop table if exists shares;
 drop table if exists udvotes;
 drop table if exists bookmarks;
+drop table if exists notifications;
 -- drop table if exists post_hierarchy;
 drop table if exists enrollments;
 drop table if exists posts;
@@ -155,6 +156,26 @@ create policy "only users can update vote" on udvotes
   for update using(auth.uid() = user_id);
 create policy "only users can unvote" on udvotes
   for delete using(auth.uid() = user_id);
+
+
+create table notifications
+(
+  id uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id uuid REFERENCES uni_users (user_id) on delete cascade,
+  content text,
+  link text,
+  is_read boolean default false,
+  date_notified TIMESTAMPTZ NOT NULL default now()
+);
+alter table notifications enable row level security;
+create policy "user can only see their notifications" on notifications
+  for select using(auth.uid() = user_id);
+-- create policy "users can only insert their enrollments" on enrollments
+--   for insert with check (auth.uid() = user_id);
+create policy "users can update their notifications" on notifications
+  for update using(auth.uid() = user_id);
+-- create policy "users can delete their enrollments" on enrollments
+--   for delete using(auth.uid() = user_id);
 --
 -- -- Re-shares table
 -- CREATE TABLE shares

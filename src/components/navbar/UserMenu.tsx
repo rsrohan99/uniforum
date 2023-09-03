@@ -81,17 +81,24 @@ const UserMenu = () => {
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => router.push('/app/profile')}>
+            <DropdownMenuItem onClick={() => {
+              router.push('/app/profile')
+              NProgress.start()
+            }}>
               Profile
             </DropdownMenuItem>
             <DropdownMenuItem onClick={() => {
+              router.push('/app')
               setBookmarks(!getLatestBookmarks())
               NProgress.start()
             }}>
               Bookmarks
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              Settings
+            <DropdownMenuItem onClick={() => {
+              router.push('/app/profile/courses')
+              NProgress.start()
+            }}>
+              Courses
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

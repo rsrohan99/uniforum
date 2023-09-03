@@ -164,6 +164,40 @@ export interface Database {
           }
         ]
       }
+      notifications: {
+        Row: {
+          content: string | null
+          date_notified: string
+          id: string
+          is_read: boolean | null
+          link: string | null
+          user_id: string | null
+        }
+        Insert: {
+          content?: string | null
+          date_notified?: string
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          content?: string | null
+          date_notified?: string
+          id?: string
+          is_read?: boolean | null
+          link?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notifications_user_id_fkey"
+            columns: ["user_id"]
+            referencedRelation: "uni_users"
+            referencedColumns: ["user_id"]
+          }
+        ]
+      }
       post_types: {
         Row: {
           name: string
@@ -189,6 +223,7 @@ export interface Database {
           title: string | null
           university: string | null
           user_id: string | null
+          votes_count: number | null
         }
         Insert: {
           content?: string | null
@@ -202,6 +237,7 @@ export interface Database {
           title?: string | null
           university?: string | null
           user_id?: string | null
+          votes_count?: number | null
         }
         Update: {
           content?: string | null
@@ -215,6 +251,7 @@ export interface Database {
           title?: string | null
           university?: string | null
           user_id?: string | null
+          votes_count?: number | null
         }
         Relationships: [
           {
