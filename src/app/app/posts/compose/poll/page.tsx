@@ -8,6 +8,7 @@ import Compose from "~/components/posts/Compose";
 import {useEnrolledCoursesHook} from "~/hooks/useEnrolledCourses";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
 import {transformHierarchy} from "~/utils/getHierarchy";
+import ComposePoll from "~/components/posts/ComposePoll";
 
 interface Department {
   dept_id: string,
@@ -144,7 +145,7 @@ function ComposePage() {
           )}
         </div>
       </div>
-      <Compose post_type={'Q&A'} uni={selectedUni} course={selectedCourse} department={selectedDepartment}/>
+      <ComposePoll post_type={'Poll'} uni={selectedUni} course={selectedCourse} department={selectedDepartment}/>
     </>
   );
 }

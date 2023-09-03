@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION insert_post(
     p_course text,
     p_department text,
     p_uni text,
-    p_user_id uuid
+    p_user_id uuid,
+    p_metadata jsonb
 )
 RETURNS VOID AS
 $$
@@ -32,8 +33,8 @@ BEGIN
 
     -- Insert a new row into prompts table
     begin
-      INSERT INTO posts (title, subtitle, user_id, embedding, content, post_type, university, department, course)
-      VALUES (p_title, p_subtitle, p_user_id, p_content_embedding, p_content, p_post_type, p_uni, p_department, p_course)
+      INSERT INTO posts (title, subtitle, user_id, embedding, content, post_type, university, department, course, metadata)
+      VALUES (p_title, p_subtitle, p_user_id, p_content_embedding, p_content, p_post_type, p_uni, p_department, p_course, p_metadata)
       RETURNING id INTO v_post_id;
     exception
       when unique_violation then

@@ -106,7 +106,8 @@ create table posts
   post_type text REFERENCES post_types (name) on delete cascade on update cascade,
   course text REFERENCES courses (id) on delete cascade on update cascade,
   department text REFERENCES departments (id) on delete cascade on update cascade,
-  university text REFERENCES university (id) on delete cascade on update cascade
+  university text REFERENCES university (id) on delete cascade on update cascade,
+  metadata jsonb;
 );
 alter table posts enable row level security;
 create policy "everyone can see posts" on posts

@@ -86,7 +86,8 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
         uni: props.uni,
         department: props.department,
         course: props.course,
-        post_type:props.post_type
+        post_type:props.post_type,
+        metadata: null
       }),
     })
 
@@ -97,7 +98,10 @@ const Compose: React.FC<ComposeProps> = ({...props}) => {
         position: "bottom-right"
       })
       router.push('/app')
-    } else showErrorToast(resp_json.error)
+    } else {
+      toast.remove('posting')
+      showErrorToast(resp_json.error)
+    }
 
     // console.log(props)
   }

@@ -26,7 +26,8 @@ serve(async (req) => {
       uni,
       department,
       course,
-      post_type
+      post_type,
+      metadata
     } = await req.json();
 
     let university = uni.toLowerCase()
@@ -77,7 +78,8 @@ ${content}`
         p_post_type: post_type,
         p_course: cours,
         p_department: dept,
-        p_uni: university
+        p_uni: university,
+        p_metadata: metadata
       })
 
     // console.log("should've called it");
