@@ -103,37 +103,39 @@ export default function PostPage({ params }: { params: { id: string } }) {
         <PostsSkeletonFull/>
       ) : (
         <>
-          <div className='mb-2'>
-            <Post {...post}/>
-          </div>
-          {(post.post_type==='Discussion' || post.post_type==="Q&A") && (
-            <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'preview'} value={post.content}/>
-          )}
-          {(replies.length >= 1) ? (
+          {post? (
             <>
+              <div className='mb-2'>
+                <Post {...post}/>
+              </div>
+              {(post.post_type==='Discussion' || post.post_type==="Q&A") && (
+                <MDEditor previewOptions={{components: {code: codeComponent}}} height={500} hideToolbar={true} preview={'preview'} value={post.content}/>
+              )}
+              {(replies.length >= 1) ? (
+                <>
+                  <div className="my-4 flex flex-row justify-center align-middle text-muted-foreground text-sm font-medium tracking-wide">
+                    Replies
+                  </div>
+                  <div className="mt-2 mb-5 flex flex-col gap-4">
+                    {replies.map(reply => (
+                      <Reply key={reply.comment_id} {...{...reply, updateComments, setUpdateComments}} />
+                    ))}
+                  </div>
+                </>
+              ):(
+                <div className="my-5 flex flex-row justify-center align-middle text-muted-foreground text-sm font-medium tracking-wide">
+                  No Replies yet
+                </div>
+              )}
               <div className="my-4 flex flex-row justify-center align-middle text-muted-foreground text-sm font-medium tracking-wide">
-                Replies
+                Add Reply
               </div>
-              <div className="mt-2 mb-5 flex flex-col gap-4">
-                {replies.map(reply => (
-                  <Reply key={reply.comment_id} {...{...reply, updateComments, setUpdateComments}} />
-                ))}
-              </div>
-            </>
-          ):(
-            <div className="my-5 flex flex-row justify-center align-middle text-muted-foreground text-sm font-medium tracking-wide">
-              No Replies yet
-            </div>
-          )}
-          <div className="my-4 flex flex-row justify-center align-middle text-muted-foreground text-sm font-medium tracking-wide">
-            Add Reply
-          </div>
-          <Textarea
-            className="my-4 h-1 rounded-xl bg-white font-medium placeholder:text-md tracking-wide placeholder:text-gray-400 text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
-            placeholder={'Add Reply'} value={commentBody} onChange={(e) => setCommentBody(e.target.value)}/>
-          <Button
-            onClick={handleComment}
-            className="
+              <Textarea
+                className="my-4 h-1 rounded-xl bg-white font-medium placeholder:text-md tracking-wide placeholder:text-gray-400 text-muted-foreground focus-visible:ring-0 focus-visible:ring-offset-0"
+                placeholder={'Add Reply'} value={commentBody} onChange={(e) => setCommentBody(e.target.value)}/>
+              <Button
+                onClick={handleComment}
+                className="
               mb-5
               px-7
               h-8
@@ -144,7 +146,11 @@ export default function PostPage({ params }: { params: { id: string } }) {
               tracking-wider
               font-bold
               text-gray-500"
-          ><span className="mr-2"><MessageCircle size={18}/></span>Post Reply</Button>
+              ><span className="mr-2"><MessageCircle size={18}/></span>Post Reply</Button>
+            </>
+            ):(
+            <>Post Doesn't Exist Anymore :(</>
+          )}
         </>
       )}
     </div>

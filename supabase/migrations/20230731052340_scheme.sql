@@ -168,12 +168,12 @@ create table notifications
   date_notified TIMESTAMPTZ NOT NULL default now()
 );
 alter table notifications enable row level security;
--- create policy "user can only see their enrollments" on enrollments
---   for select using(auth.uid() = user_id);
+create policy "user can only see their notifications" on notifications
+  for select using(auth.uid() = user_id);
 -- create policy "users can only insert their enrollments" on enrollments
 --   for insert with check (auth.uid() = user_id);
--- create policy "users can update their enrollments" on enrollments
---   for update using(auth.uid() = user_id);
+create policy "users can update their notifications" on notifications
+  for update using(auth.uid() = user_id);
 -- create policy "users can delete their enrollments" on enrollments
 --   for delete using(auth.uid() = user_id);
 --
