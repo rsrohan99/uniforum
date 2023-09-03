@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import {useBookmarks} from "~/hooks/useBookmarks";
 import {usePostSorting} from "~/hooks/usePostSorting";
 import {usePostRange} from "~/hooks/usePostRange";
+import {useEnrolledCoursesHook} from "~/hooks/useEnrolledCourses";
 
 const PostsContainer = () => {
 
@@ -34,6 +35,7 @@ const PostsContainer = () => {
   const {isBookmarks, getLatestBookmarks} = useBookmarks()
   const {sortOrder, getLatestSortOrder} = usePostSorting()
   const {postRange, getLatestRange} = usePostRange()
+  const {setEnrolledCourses, getLatestEnrolledCourses} = useEnrolledCoursesHook();
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -56,6 +58,7 @@ const PostsContainer = () => {
           .select('course')
           .eq('user_id', session?.user.id)
         if (courses_data && courses_data.length > 0) {
+          setEnrolledCourses(courses_data.map(course => (course.course as string)))
           setCoursesFilters(courses_data.filter(course => !course.course.includes('_all_~')).map(course => ({
             courseId: course.course,
             checked: false
@@ -109,6 +112,7 @@ const PostsContainer = () => {
             department,
             course
           `)
+          .in('course', [...getLatestEnrolledCourses(), 'buet_all_~'])
 
         const filteredPostTypes: string[] = getLatestPostTypeFilters().filter(postTypeFilter => postTypeFilter.checked).map(postTypeFilter => postTypeFilter.postType)
         const filteredCourses: string[] = getLatestCoursesFilters().filter(courseFilter => courseFilter.checked).map(courseFilter => courseFilter.courseId)
