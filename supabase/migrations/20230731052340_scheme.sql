@@ -106,7 +106,8 @@ create table posts
   post_type text REFERENCES post_types (name) on delete cascade on update cascade,
   course text REFERENCES courses (id) on delete cascade on update cascade,
   department text REFERENCES departments (id) on delete cascade on update cascade,
-  university text REFERENCES university (id) on delete cascade on update cascade
+  university text REFERENCES university (id) on delete cascade on update cascade,
+  metadata jsonb;
 );
 alter table posts enable row level security;
 create policy "everyone can see posts" on posts
@@ -208,6 +209,8 @@ create policy "only users can comment" on comments
   for insert with check (auth.uid() = user_id);
 create policy "only users can comment" on comments
   for delete using(auth.uid() = user_id);
+create policy "users can update their post replies" on comments
+  for update using(auth.uid() = (select user_id from posts where posts.id = post_id));
 -- drop table if exists post_hierarchy;
 -- create table post_hierarchy
 -- (

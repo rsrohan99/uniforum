@@ -17,6 +17,11 @@ export interface ReplyProps {
     username: string;
     profile_pic: string;
   };
+  post_info: {
+    id: string,
+    user_id: string,
+    post_type: string,
+  };
   date_commented: string;
   comment_content: string;
   best_answer: boolean,
@@ -83,6 +88,49 @@ const Reply: React.FC<ReplyProps> = ({
   //   setUpdateVotesReplies(!updateVotesReplies);
   // }
 
+  const updateBestAnswer = () => {
+    toast.loading("Updating Best Answer", {position: "bottom-right", id: 'best-answer'})
+    const queryToSetFalse = supabase
+      .from('comments')
+      .update({best_answer: false})
+      .neq('comment_id', comment.comment_id)
+      .eq('post_id', comment.post_info.id)
+
+    const queryToUpdate = supabase
+      .from('comments')
+      .update({best_answer: !comment.best_answer})
+      .eq('comment_id', comment.comment_id)
+
+    Promise.all([queryToSetFalse, queryToUpdate])
+      .then(() => {
+        toast.remove('best-answer')
+        toast.success("Updated Best Answer", {position: "bottom-right"})
+        if (comment?.setUpdateComments) comment?.setUpdateComments(!comment?.updateComments)
+      })
+      .catch(() => {
+          toast.remove('best-answer')
+          showErrorToast("Error while updating best answer.")
+      })
+
+    // const {error} = await queryToSetFalse
+    // const {error: error2} = await queryToUpdate
+    //
+    // if (error || error2) {
+    //   toast.remove('best-answer')
+    //   showErrorToast("Error while updating best answer.")
+    //   return
+    // }
+    // toast.remove('best-answer')
+    // toast.success("Updated Best Answer", {position: "bottom-right"})
+
+    // else {
+    //   toast.remove('deleting')
+    //   toast.success("Reply deleted", {position: "bottom-right"})
+    //   // toggleTriggerPostRefresh();
+    //   if (comment?.setUpdateComments) comment?.setUpdateComments(!comment?.updateComments)
+    // }
+  }
+
   return (
     <div
       className="rounded-xl bg-white px-3 pt-0 pb-3 shadow-sm">
@@ -102,6 +150,12 @@ const Reply: React.FC<ReplyProps> = ({
         {/*<div>*/}
         {/*  <p className="rounded-2xl px-4 py-2 text-xs font-bold tracking-wide text-gray-500 bg-background">{post.post_type}</p>*/}
         {/*</div>*/}
+        {(comment.post_info.user_id===session?.user.id && comment.post_info.post_type==="Q&A") && (
+          <div
+            onClick={updateBestAnswer}
+            className={`rounded-xl text-xs ${comment.best_answer? "bg-green-400 text-white":"bg-background text-muted-foreground"} font-semibold tracking-wide px-3 py-1 hover:text-white hover:bg-green-400 cursor-pointer`}
+          >{comment.best_answer? "Best Answer": "Set Best Answer"}</div>
+        )}
         {(comment.user.user_id === session?.user.id) && (
           <AlertDialog>
             <AlertDialogTrigger asChild>
@@ -129,38 +183,6 @@ const Reply: React.FC<ReplyProps> = ({
           <p className="text-sm font-medium text-gray-500">{comment.comment_content}</p>
         </div>
       </div>
-      {/*<div className="mt-7 flex flex-wrap gap-3 items-center justify-between text-xs font-semibold text-slate-500">*/}
-      {/*  <div className="flex items-center rounded-3xl px-6 py-2 bg-background">*/}
-      {/*    <ChevronUp onClick={async () => await vote(1)} size={18} className={`${isUpvoted? "text-accent2": "text-slate-500"} cursor-pointer`} />*/}
-      {/*    <p className="ml-4 text-accent2">{votesCount || "0"}</p>*/}
-      {/*    <ChevronDown onClick={async () => await vote(-1)} size={18} className={`ml-4 ${isDownvoted? "text-accent2": "text-slate-500" } cursor-pointer`} />*/}
-      {/*  </div>*/}
-      {/*  <div className="flex items-center">*/}
-      {/*    <MessageCircle size={18} />*/}
-      {/*    <p className="ml-2">{repliesCount} replies</p>*/}
-      {/*  </div>*/}
-      {/*    <Popover>*/}
-      {/*      <PopoverTrigger>*/}
-      {/*        <div className="flex items-center hover:text-accent2">*/}
-      {/*          <Share2 size={18} />*/}
-      {/*          <p className="ml-2">Share</p>*/}
-      {/*        </div>*/}
-      {/*      </PopoverTrigger>*/}
-      {/*      <PopoverContent className="w-full text-muted-foreground">*/}
-      {/*        <ShareButtom link={`${location.href}/app/posts/${post.id}`}/>*/}
-      {/*      </PopoverContent>*/}
-      {/*    </Popover>*/}
-      {/*  <div className={`flex items-center hover:text-accent2 cursor-pointer ${isSaved?"text-accent2": "text-muted-foreground"}`}*/}
-      {/*       onClick={async () => await saveBookmark(post.id)}*/}
-      {/*  >*/}
-      {/*    <Download size={18} />*/}
-      {/*    <p className="ml-2">Save{isSaved?"d":""}</p>*/}
-      {/*  </div>*/}
-        {/*<div className="flex items-center">*/}
-        {/*  <Flag size={18} />*/}
-        {/*  <p className="ml-2">Report</p>*/}
-        {/*</div>*/}
-      {/*</div>*/}
     </div>
   );
 }

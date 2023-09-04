@@ -169,6 +169,11 @@ const PostsContainer = () => {
   return (
     <div
       className="flex w-10/12 flex-col gap-4 rounded-xl lg:w-7/12">
+      {getLatestBookmarks() && (
+        <div
+          className="flex flex-row align-middle justify-center text-muted-foreground text-lg font-semibold tracking-wider"
+        >Bookmarks</div>
+      )}
       {getLatestPostsLoading() ? (
         <>
           <PostsSkeleton />

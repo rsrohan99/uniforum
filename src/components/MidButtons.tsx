@@ -93,7 +93,10 @@ const MidButtons = () => {
               }}>
                 Q&A
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <DropdownMenuItem onClick={() => {
+                NProgress.start()
+                router.push('/app/posts/compose/poll')
+              }}>
                 Poll
               </DropdownMenuItem>
             </DropdownMenuContent>

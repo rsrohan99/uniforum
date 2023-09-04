@@ -75,18 +75,18 @@ const UserMenu = () => {
             <div className="flex flex-col space-y-1">
               <p className="text-sm font-medium leading-none">Rohan</p>
               <p className="text-xs leading-none text-muted-foreground">
-                @rsrohan
+                @rsrohan99
               </p>
             </div>
           </DropdownMenuLabel>
           <DropdownMenuSeparator />
           <DropdownMenuGroup>
-            <DropdownMenuItem onClick={() => {
-              router.push('/app/profile')
-              NProgress.start()
-            }}>
-              Profile
-            </DropdownMenuItem>
+            {/*<DropdownMenuItem onClick={() => {*/}
+            {/*  router.push('/app/profile')*/}
+            {/*  NProgress.start()*/}
+            {/*}}>*/}
+            {/*  Profile*/}
+            {/*</DropdownMenuItem>*/}
             <DropdownMenuItem onClick={() => {
               router.push('/app')
               setBookmarks(!getLatestBookmarks())

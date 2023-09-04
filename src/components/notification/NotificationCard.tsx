@@ -46,7 +46,7 @@ const NotificationCard: React.FC<NotificationCardProps> = ({
         <AvatarFallback className="bg-background">{content.match(/[a-zA-Z]/)[0].toUpperCase() || "S"}</AvatarFallback>
       </Avatar>
       <div
-        className={`text-sm ${is_read? "font-medium": "font-semibold tracking-wide"} text-gray-600`}>{content}</div>
+        className={`text-sm ${is_read? "": "font-semibold tracking-wide"} text-gray-600`}>{content}</div>
     </div>
   );
 }
