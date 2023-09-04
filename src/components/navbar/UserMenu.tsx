@@ -58,18 +58,7 @@ const UserMenu = () => {
     
   // )`)
   // .eq('user_id', useSession?.user.id)
-  const getTotalVotes = async () => {
-    const {data:data1} = await supabase
-      .from('posts')
-      .select('votes_count')
-      .eq('user_id', currentSession?.user.id)
-    // console.log(data1)
-    let _totalVotes = 0
-    for (let votecount of data1) {
-      _totalVotes += votecount.votes_count
-    }
-    setTotalVotes(_totalVotes)
-  }
+  
   const getPostsCommented = async () => {
     const {data} = await supabase
       .from('comments')
