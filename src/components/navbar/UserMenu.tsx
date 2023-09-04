@@ -50,6 +50,44 @@ const UserMenu = () => {
     router.push('/')
   }
 
+  // let queryBuilder1 = useSupabase
+  // .from('bookmarks')
+  // .select(`post_id(
+  //   id,
+  //   user: user_id(user_id, username, profile_pic),
+    
+  // )`)
+  // .eq('user_id', useSession?.user.id)
+  const getTotalVotes = async () => {
+    const {data:data1} = await supabase
+      .from('posts')
+      .select('votes_count')
+      .eq('user_id', currentSession?.user.id)
+    // console.log(data1)
+    let _totalVotes = 0
+    for (let votecount of data1) {
+      _totalVotes += votecount.votes_count
+    }
+    setTotalVotes(_totalVotes)
+  }
+  const getPostsCommented = async () => {
+    const {data} = await supabase
+      .from('comments')
+      .select('post_id')
+      .eq('user_id', currentSession?.user.id)
+    const listPosts = data?.map(post => (post.post_id as string))
+    // console.log(listPosts)
+    // console.log(listPosts.length)
+    const uniquePosts = new Set(listPosts)
+    // console.log(uniquePosts.size)
+    setPostsCommented(uniquePosts.size)
+  }
+
+  const getCommentsReceived = async () => {
+    const {data:postsData} = await supabase
+      .from('posts')
+      .select('id')
+      .eq('user_id', currentSession?.user.id)
 
   return (
     <div className="flex items-center justify-between gap-2 sm:gap-5">
@@ -104,6 +142,9 @@ const UserMenu = () => {
           <DropdownMenuSeparator />
           <DropdownMenuItem onClick={handleSignOut}>
             Log out
+          </DropdownMenuItem>
+          <DropdownMenuItem onClick={handleSignOut}>
+            Votes_Count
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
