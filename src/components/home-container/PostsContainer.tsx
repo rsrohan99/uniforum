@@ -71,6 +71,17 @@ const PostsContainer = () => {
 
   
 
+    const postIds = postsData?.map(postData => (postData.id as string)) || []
+
+    const {count} = await supabase
+      .from('comments')
+      .select('comment_id', {count: "exact"})
+      .in('post_id', postIds)
+
+    setTotalComments(count || 0)
+  }
+
+
   useEffect(() => {
     return () => {
       if (pathname !== '/app') return
@@ -106,6 +117,7 @@ const PostsContainer = () => {
             user: user_id(user_id, username, profile_pic),
             title,
             date_posted,
+            comments(count),
             subtitle,
             post_type,
             university,
@@ -113,6 +125,20 @@ const PostsContainer = () => {
             course
           `)
           .in('course', [...getLatestEnrolledCourses(), 'buet_all_~'])
+
+          // const { data, error } = await clientSupabase
+          // .from('comments')
+          // .select('post_id, count(*) as total_comments')
+          // .group('post_id' as any)
+          // .order('total_comments', { ascending: false });
+          let queryBuilder1 = clientSupabase
+          .from('comments')
+          .select('count(*) as total_comments')
+          .group('post_id' as any)
+          .order('total_comments', { ascending: false })
+          
+          
+     
 
         const filteredPostTypes: string[] = getLatestPostTypeFilters().filter(postTypeFilter => postTypeFilter.checked).map(postTypeFilter => postTypeFilter.postType)
         const filteredCourses: string[] = getLatestCoursesFilters().filter(courseFilter => courseFilter.checked).map(courseFilter => courseFilter.courseId)
@@ -124,35 +150,16 @@ const PostsContainer = () => {
         if (getLatestQuery() || searchPostIds.length > 0) queryBuilder = queryBuilder.in('id', searchPostIds)
 
         if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
-        else if (getLatestSortOrder() === "top") queryBuilder = queryBuilder.order('votes_count', { ascending: false })
-
-        const latestRange = getLatestRange()
-        if (latestRange === "today") {
-          const today = new Date()
-          today.setHours(0,0,0,0)
-          queryBuilder = queryBuilder.gte('date_posted', today.toISOString())
+        if (getLatestSortOrder() === "top") {
+          const sortedPosts = posts?.sort((a,b) => a.comments[0].count > b.comments.count)
+          setPosts(sortedPosts)
+          setPostsLoading(false)
+          NProgress.done()
+          return
         }
-        else if (latestRange === "this_week") {
-          const startOfLastWeek = new Date();
-          startOfLastWeek.setDate(startOfLastWeek.getDate() - startOfLastWeek.getDay() - 6);
-          startOfLastWeek.setHours(0,0,0,0)
-          queryBuilder = queryBuilder.gte('date_posted', startOfLastWeek.toISOString())
-        }
-        else if (latestRange === "this_month") {
-          const startOfLastMonth = new Date();
-          startOfLastMonth.setMonth(startOfLastMonth.getMonth() - 1);
-          startOfLastMonth.setDate(1);
-          startOfLastMonth.setHours(0,0,0,0)
-          queryBuilder = queryBuilder.gte('date_posted', startOfLastMonth.toISOString())
-        }
-        else if (latestRange === "this_year") {
-          const startOfLastYear = new Date();
-          startOfLastYear.setFullYear(startOfLastYear.getFullYear() - 1);
-          startOfLastYear.setMonth(0);
-          startOfLastYear.setDate(1);
-          startOfLastYear.setHours(0,0,0,0)
-          queryBuilder = queryBuilder.gte('date_posted', startOfLastYear.toISOString())
-        }
+    
+    
+       
 
         const { data: posts, error: posts_error } = await queryBuilder
         if (posts_error) throw posts_error;
