@@ -117,6 +117,14 @@ const ComposePoll: React.FC<ComposeProps> = ({...props}) => {
             <Button
               className="px-7 h-8 rounded-xl bg-accent2 text-white tracking-wider font-bold focus-visible:ring-0 focus-visible:ring-offset-0 hover:bg-accent2 hover:text-white"
               onClick={() => {
+                if (pollOptions.includes(newPollOption)) {
+                  showErrorToast("Poll Option already exists")
+                  return
+                }
+                if (!newPollOption) {
+                  showErrorToast("Poll Option cannot be empty")
+                  return;
+                }
                 setPollOptions([...pollOptions, newPollOption])
                 setNewPollOption("")
               }}
