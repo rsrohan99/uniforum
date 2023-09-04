@@ -140,6 +140,51 @@ AFTER INSERT ON comments
 FOR EACH ROW
 EXECUTE FUNCTION notify_comment();
 
+CREATE OR REPLACE FUNCTION vote_on_poll(p_poll_id UUID, p_vote_option TEXT, p_user_id UUID)
+RETURNS VOID AS $$
+DECLARE
+    new_metadata JSONB;
+    option_exists BOOLEAN;
+BEGIN
+    -- Check if user has already voted
+    IF EXISTS (SELECT 1 FROM user_polls WHERE user_id = p_user_id AND poll_id = p_poll_id) THEN
+        RAISE EXCEPTION 'User has already voted';
+    END IF;
+
+    -- Check if the option exists in the poll
+    SELECT EXISTS(
+        SELECT 1
+        FROM posts
+        WHERE id = p_poll_id AND metadata->'currentPolls' @> jsonb_build_array(jsonb_build_object('option', p_vote_option))
+    ) INTO option_exists;
+
+    IF NOT option_exists THEN
+        RAISE EXCEPTION 'Option does not exist';
+    END IF;
+
+    -- Construct the new metadata with updated vote count
+    SELECT jsonb_build_object(
+      'isOpen', (SELECT metadata->'isOpen' from posts where id=p_poll_id),
+      'currentPolls', jsonb_agg(
+        CASE
+            WHEN elem->>'option' = p_vote_option THEN jsonb_build_object('option', p_vote_option, 'count', (elem->>'count')::INTEGER + 1)
+            ELSE elem
+        END
+    ))
+    INTO new_metadata
+    FROM posts, jsonb_array_elements(posts.metadata->'currentPolls') AS elem
+    WHERE id = p_poll_id;
+
+    -- Update the poll's metadata with the new_metadata
+    UPDATE posts
+    SET metadata = new_metadata
+    WHERE id = p_poll_id;
+
+    -- Insert the user's vote into user_votes table
+    INSERT INTO user_polls (user_id, post_id, poll_option) VALUES (p_user_id, p_poll_id, p_vote_option);
+END;
+$$ LANGUAGE plpgsql security definer;
+
 DROP TRIGGER IF EXISTS on_auth_user_created on auth.users;
 drop function if exists public.handle_new_user;
 create or replace function public.handle_new_user()

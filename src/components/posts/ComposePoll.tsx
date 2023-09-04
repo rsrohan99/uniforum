@@ -60,7 +60,10 @@ const ComposePoll: React.FC<ComposeProps> = ({...props}) => {
         department: props.department,
         course: props.course,
         post_type:props.post_type,
-        metadata: {currentPolls: pollOptions.map(pollOption => ({option: pollOption, count: 0}))}
+        metadata: {
+          isOpen: true,
+          currentPolls: pollOptions.map(pollOption => ({option: pollOption, count: 0}))
+        }
       }),
     })
 

@@ -1,16 +1,12 @@
 'use client'
 
 import React, {useEffect, useState} from "react";
-import {ChevronDown, ChevronUp, Download, Flag, MessageCircle, Share2, Trash} from 'lucide-react';
+import {ChevronDown, ChevronUp, Download, MessageCircle, Share2, Trash} from 'lucide-react';
 import {Avatar, AvatarFallback, AvatarImage} from "~/components/ui/avatar";
 import {useRouter} from "next/navigation";
 import {useSession, useSupabase} from "~/providers/supabase-provider";
 import {AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle, AlertDialogTrigger,} from "~/components/ui/alert-dialog"
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "~/components/ui/popover"
+import {Popover, PopoverContent, PopoverTrigger,} from "~/components/ui/popover"
 import {showErrorToast} from "~/components/posts/Compose";
 import toast from "react-hot-toast";
 import {useTriggerPostRefresh} from "~/hooks/useTriggerPostRefresh";
@@ -75,6 +71,13 @@ export interface PostProps {
   university: string,
   department: string,
   course: string,
+  metadata?: {
+    isOpen: boolean,
+    currentPolls: {
+      option: string,
+      count: number,
+    }[]
+  },
   // }
 }
 
@@ -107,6 +110,11 @@ const Post: React.FC<PostProps> = ({
 
   const [updateVotesReplies, setUpdateVotesReplies] = useState(false)
   const [updateSaveStatus, setUpdateSaveStatus] = useState(false)
+
+  const [updatePolls, setUpdatePolls] = useState(false)
+  const [metadata, setMetadata] = useState(post.metadata)
+
+  const [userPoll, setUserPoll] = useState("")
 
   const [isUpvoted, setIsUpvoted] = useState(false)
   const [isDownvoted, setIsDownvoted] = useState(false)
@@ -151,6 +159,7 @@ const Post: React.FC<PostProps> = ({
         const {count: repCount} = await getRepliesPromise
         setRepliesCount(repCount || 0);
       }
+
       getVotesReplies();
     };
   }, [updateVotesReplies, hasMounted]);
@@ -243,6 +252,76 @@ const Post: React.FC<PostProps> = ({
     setUpdateVotesReplies(!updateVotesReplies);
   }
 
+  useEffect(() => {
+    return () => {
+      const getMetadata = async () => {
+        const {data} = await supabase
+          .from('posts')
+          .select('metadata')
+          .eq('id', post.id)
+        if (data!==undefined && data && data[0])
+          setMetadata(data[0].metadata)
+      }
+      getMetadata();
+    };
+  }, [updatePolls]);
+
+  useEffect(() => {
+    return () => {
+      if (post.post_type !== "Poll") return
+      const getMyPolls = async () => {
+        const {data} = await supabase
+          .from('user_polls')
+          .select('poll_option')
+          .eq('user_id', session?.user.id)
+          .eq('post_id', post.id)
+        setUserPoll((data[0]===undefined)? "" : (data[0].poll_option) || "")
+        // console.log(data)
+      }
+
+      if (post.post_type === "Poll") getMyPolls();
+      // console.log("Here")
+
+    };
+  }, [hasMounted, updatePolls]);
+
+
+
+  const handlePoll = async (option:string) => {
+    toast.loading("Submitting Vote on Poll", {id: 'polling', position:"bottom-right"})
+    const {error} = await supabase
+      .rpc('vote_on_poll', {
+        p_poll_id: post.id,
+        p_user_id: session?.user.id,
+        p_vote_option: option
+      })
+    toast.remove('polling')
+    if (error) {
+      if (error.message.includes("duplicate key value violates unique constraint")) {
+        showErrorToast("Already Voted")
+      }
+    } else {
+      setUpdatePolls(!updatePolls)
+      toast.success("Updated Vote", {position:"bottom-right"})
+    }
+  }
+
+  const getPercentage = (option: string) => {
+    const targetObject = metadata?.currentPolls.find(obj => obj.option === option);
+
+    if (!targetObject) {
+      return 33;
+    }
+
+    // Calculate the sum of scores for all objects
+    const totalScore = metadata?.currentPolls.reduce((acc, obj) => acc + obj.count, 0);
+
+    if (totalScore===undefined) return 33;
+
+    // Calculate the percentage
+    return Math.floor((targetObject.count / totalScore) * 100) || 0;
+  }
+
   return (
     <div
       className="rounded-xl bg-white p-5 shadow-sm">
@@ -286,11 +365,12 @@ const Post: React.FC<PostProps> = ({
           </AlertDialog>
         )}
       </div>
-      <div onClick={goToPostPage} className='cursor-pointer'>
+      <div>
         <div
-          className="mt-1 flex">
+          onClick={goToPostPage}
+          className="mt-1 flex cursor-pointer">
           <h5
-            className="text-xl font-bold text-gray-600">{post.title}</h5>
+            className="text-xl font-bold text-gray-600 mb-3">{post.title}</h5>
           {/*<div className="ml-5 flex">*/}
           {/*  {post.tags.map((tag, index) => (*/}
           {/*    <div*/}
@@ -301,10 +381,31 @@ const Post: React.FC<PostProps> = ({
           {/*  ))}*/}
           {/*</div>*/}
         </div>
-        <div
-          className="mt-3">
-          <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
-        </div>
+        {(post.post_type==="Poll")? (
+          <div className="flex flex-col gap-3">
+            {
+              metadata?.currentPolls.sort((a,b)=>(b.count-a.count)).map(currentPoll => (
+                <div
+                  onClick={async () => {
+                    await handlePoll(currentPoll.option)
+                  }}
+                  key={currentPoll.option}
+                  style={{width: `${getPercentage(currentPoll.option)}%`}}
+                  className={`flex flex-row gap-4 justify-between px-4 py-[5px] bg-background rounded-xl text-xs text-muted-foreground font-semibold tracking-wide cursor-pointer ${(userPoll===currentPoll.option)?"ring-1 ring-accent2":""}`}>
+                    <span>{currentPoll.option}</span>
+                    {/*<span>{currentPoll.count}</span>*/}
+                    <span>{getPercentage(currentPoll.option)}%</span>
+                </div>
+              ))
+            }
+          </div>
+          ):(
+          <div
+            onClick={goToPostPage}
+            className="mt-3 cursor-pointer">
+            <p className="text-sm font-medium text-gray-500">{post.subtitle}</p>
+          </div>
+        )}
       </div>
       <div className="mt-7 flex flex-wrap gap-3 items-center justify-between text-xs font-semibold text-slate-500">
         <div className="flex items-center rounded-3xl px-6 py-2 bg-background">

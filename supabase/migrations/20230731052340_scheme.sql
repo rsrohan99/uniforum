@@ -8,6 +8,7 @@ drop table if exists comments;
 drop table if exists udvotes;
 drop table if exists bookmarks;
 drop table if exists notifications;
+drop table if exists user_polls;
 -- drop table if exists post_hierarchy;
 drop table if exists enrollments;
 drop table if exists posts;
@@ -158,6 +159,18 @@ create policy "only users can update vote" on udvotes
 create policy "only users can unvote" on udvotes
   for delete using(auth.uid() = user_id);
 
+CREATE TABLE user_polls
+(
+    poll_id     uuid PRIMARY KEY DEFAULT uuid_generate_v4(),
+    user_id         uuid REFERENCES uni_users (user_id) on delete cascade,
+    post_id       uuid REFERENCES posts (id) on delete cascade,
+    poll_option    text,
+    date_voted TIMESTAMPTZ NOT NULL default now(),
+    unique (user_id, post_id)
+);
+alter table user_polls enable row level security;
+create policy "user can only see their poll votes" on user_polls
+  for select using(auth.uid() = user_id);
 
 create table notifications
 (

@@ -110,7 +110,8 @@ const PostsContainer = () => {
             post_type,
             university,
             department,
-            course
+            course,
+            metadata
           `)
           .in('course', [...getLatestEnrolledCourses(), 'buet_all_~'])
 
