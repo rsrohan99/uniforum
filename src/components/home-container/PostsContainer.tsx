@@ -17,6 +17,7 @@ import {useBookmarks} from "~/hooks/useBookmarks";
 import {usePostSorting} from "~/hooks/usePostSorting";
 import {usePostRange} from "~/hooks/usePostRange";
 import {useEnrolledCoursesHook} from "~/hooks/useEnrolledCourses";
+import {useTreeSelectorHook} from "~/hooks/useTreeSelector";
 
 const PostsContainer = () => {
 
@@ -36,6 +37,7 @@ const PostsContainer = () => {
   const {sortOrder, getLatestSortOrder} = usePostSorting()
   const {postRange, getLatestRange} = usePostRange()
   const {setEnrolledCourses, getLatestEnrolledCourses} = useEnrolledCoursesHook();
+  const {getLatestSelected, selected} = useTreeSelectorHook();
 
   const [hasMounted, setHasMounted] = useState(false);
   useEffect(() => {
@@ -122,6 +124,7 @@ const PostsContainer = () => {
 
         if (filteredPostTypes.length > 0) queryBuilder = queryBuilder.in('post_type', filteredPostTypes)
         if (filteredCourses.length > 0) queryBuilder = queryBuilder.in('course', filteredCourses)
+        if (getLatestSelected()) queryBuilder = queryBuilder.eq('course', getLatestSelected())
         if (getLatestQuery() || searchPostIds.length > 0) queryBuilder = queryBuilder.in('id', searchPostIds)
 
         if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
@@ -164,7 +167,7 @@ const PostsContainer = () => {
       }
       getPosts();
     };
-  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks, sortOrder, postRange]);
+  }, [hasMounted, postTypesFilters, coursesFilters, post_ids, triggerPostRefresh, isBookmarks, sortOrder, postRange, selected]);
 
 
   return (
