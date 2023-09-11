@@ -126,9 +126,10 @@ const PostsContainer = () => {
         if (filteredCourses.length > 0) queryBuilder = queryBuilder.in('course', filteredCourses)
         if (getLatestSelected()) queryBuilder = queryBuilder.eq('course', getLatestSelected())
         if (getLatestQuery() || searchPostIds.length > 0) queryBuilder = queryBuilder.in('id', searchPostIds)
-
-        if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
-        else if (getLatestSortOrder() === "top") queryBuilder = queryBuilder.order('votes_count', { ascending: false })
+        else {
+          if (getLatestSortOrder() === "new") queryBuilder = queryBuilder.order('date_posted', { ascending: false })
+          else if (getLatestSortOrder() === "top") queryBuilder = queryBuilder.order('votes_count', { ascending: false })
+        }
 
         const latestRange = getLatestRange()
         if (latestRange === "today") {
