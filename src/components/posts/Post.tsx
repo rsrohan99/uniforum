@@ -190,10 +190,10 @@ const Post: React.FC<PostProps> = ({
           <Download size={18} />
           <p className="ml-2">Save</p>
         </div>
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <Flag size={18} />
           <p className="ml-2">Report</p>
-        </div>
+        </div> */}
       </div>
     </div>
   );

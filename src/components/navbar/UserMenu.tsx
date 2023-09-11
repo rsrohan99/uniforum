@@ -85,8 +85,8 @@ const UserMenu = () => {
             <DropdownMenuItem>
               Bookmarks
             </DropdownMenuItem>
-            <DropdownMenuItem>
-              Settings
+            <DropdownMenuItem onClick={() => router.push('/app/courses')}>
+              Courses
             </DropdownMenuItem>
           </DropdownMenuGroup>
           <DropdownMenuSeparator />

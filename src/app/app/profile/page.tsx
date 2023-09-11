@@ -5,7 +5,7 @@ const ProfilePage = () => {
       <form className="mt-10">
         <label>
           Update Profile Picture:
-          <input type="file" accept="image/*" className="rounded-md ml-5" />
+          <input type="file" accept="image/*" className="rounded-md ml-5 h-10" />
         </label>
         <br />
         <br />
@@ -20,7 +20,7 @@ const ProfilePage = () => {
         </label>
         <br />
         <br />
-        <button className="w-32 h-12 bg-accent2 text-white rounded-md">Update profile</button>
+        <button className="w-32 h-10 bg-accent2 text-white rounded-md">Update profile</button>
       </form>
     </>
   )

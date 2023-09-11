@@ -27,6 +27,9 @@ const NotificationBell = () => {
             <NotificationCard content={"New Announcement from BUET/CSE/CSE301"}/>
             <NotificationCard content={"Your poll has updates"}/>
             <NotificationCard content={"@theo replied to your q&a post"}/>
+            <NotificationCard content={"@susanne replied to you"}/>
+            <NotificationCard content={"New Announcement from BUET/ME/ME302"}/>
+            <NotificationCard content={"Your poll has updates"}/>
           </div>
         </SheetContent>
       </Sheet>

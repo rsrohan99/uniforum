@@ -38,7 +38,6 @@ const LandingPage = () => {
         <TypewriterEffect lines={tagLines}/>
         <LoginButton/>
       </div>
-
     </div>
   )
 };

@@ -5,9 +5,9 @@ import React from "react";
 const courses = {
   university: "BUET",
   departments: {
-    "CSE": ["CSE101", "CSE102", "CSE103", "CSE204", "CSE302"],
-    "EEE": ["EEE101", "EEE103", "EEE204"],
-    "ME": ["ME101", "ME102", "ME204", "ME302"],
+    "CSE": ["CSE101", "CSE102", "CSE204", "CSE302"],
+    "EEE": ["EEE101", "EEE203"],
+    "ME": ["ME101", "ME204", "ME302"],
   }
 }
 
@@ -21,7 +21,7 @@ const CoursesTree = () => {
         {
           Object.keys(courses.departments).map((department, index) => {
             return (
-              <div key={index} className="flex flex-col w-full mb-5">
+              <div key={index} className="flex flex-col w-full mb-2">
                 <div className="flex flex-row items-center justify-between w-full px-2 py-2 text-sm font-semibold text-gray-500 bg-gray-100 rounded-t-xl">
                   <span>{department}</span>
                   <span className="text-xs font-medium text-gray-400">{courses.departments[department].length}</span>
